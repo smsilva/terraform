@@ -10,6 +10,10 @@ variable "dns_prefix" {
     default = "silvios-sandbox"
 }
 
+variable tag_environment_name {
+    default = "sandbox"
+}
+
 variable cluster_name {
     default = "sandbox"
 }
@@ -24,6 +28,10 @@ variable location {
 
 variable orchestrator_version {
     default = "1.19.11"
+}
+
+variable nodepool_os_disk_type {
+    default = "Managed" 
 }
 
 variable nodepool_max_pods {
@@ -60,4 +68,15 @@ variable network_plugin {
 
 variable load_balancer_sku {
     default = "Standard"
+}
+
+variable admin_group_object_ids {
+    default = [
+        "d5075d0a-3704-4ed9-ad62-dc8068c7d0e1"
+    ]
+
+    validation {
+        condition     = length(var.admin_group_object_ids) > 0
+        error_message = "Shoud you use at least one group."
+    }
 }

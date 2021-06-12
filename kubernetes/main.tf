@@ -1,6 +1,13 @@
+locals {
+    tags = {
+        Environment = "${var.tag_environment_name}"
+    }
+}
+
 resource "azurerm_resource_group" "default" {
-    name     = "${var.resource_group_name}"
+    name     = "${var.resource_group_name}-${var.location}"
     location = "${var.location}"
+    tags     = "${local.tags}"
 }
 
 resource "azurerm_kubernetes_cluster" "default" {
@@ -20,7 +27,7 @@ resource "azurerm_kubernetes_cluster" "default" {
         only_critical_addons_enabled = true
         type                         = "VirtualMachineScaleSets"
         vm_size                      = "${var.nodepool_vm_size}"
-        os_disk_type                 = "Managed"
+        os_disk_type                 = "${var.nodepool_os_disk_type}"
 
         upgrade_settings {
             max_surge = "${var.nodepool_default_max_surge}"
@@ -41,7 +48,7 @@ resource "azurerm_kubernetes_cluster" "default" {
 
         azure_active_directory {
             managed                = true
-            admin_group_object_ids = ["d5075d0a-3704-4ed9-ad62-dc8068c7d0e1"]
+            admin_group_object_ids = var.admin_group_object_ids
         }
     }
 
@@ -67,9 +74,6 @@ resource "azurerm_kubernetes_cluster" "default" {
         }
     }
 
-    tags = {
-        Environment = "Sandbox"
-    }
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "default" {
@@ -83,7 +87,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "default" {
     max_pods              = "${var.nodepool_max_pods}"
     mode                  = "User"
     vm_size               = "${var.nodepool_vm_size}"
-    os_disk_type          = "Managed"
+    os_disk_type          = "${var.nodepool_os_disk_type}"
     
     upgrade_settings {
         max_surge = "${var.nodepool_user_max_surge}"
