@@ -1,0 +1,23 @@
+location: "centralus"
+resource_group_name: "sandbox"
+
+environment_name: "sandbox"
+
+cluster_name: "demo"
+dns_prefix: "silvios"
+orchestrator_version: "1.19.11"
+
+nodepool_node_count: 1
+nodepool_min_count: 1
+nodepool_max_count: 5
+nodepool_max_pods: 150
+nodepool_vm_size: "Standard_D4s_v3"
+nodepool_os_disk_type: "Managed"
+nodepool_default_max_surge: 33%
+nodepool_user_max_surge: 50%
+
+network_plugin: "azure"
+load_balancer_sku: "Standard"
+
+admin_group_object_ids:
+- "d5075d0a-3704-4ed9-ad62-dc8068c7d0e1"

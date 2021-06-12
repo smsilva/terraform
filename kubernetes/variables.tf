@@ -1,17 +1,5 @@
-variable "agent_count" {
-    default = 3
-}
-
-variable "ssh_public_key" {
-    default = "~/.ssh/id_rsa.pub"
-}
-
-variable "dns_prefix" {
-    default = "silvios-sandbox"
-}
-
-variable tag_environment_name {
-    default = "sandbox"
+variable location {
+    default = "centralus"
 }
 
 variable cluster_name {
@@ -22,8 +10,12 @@ variable resource_group_name {
     default = "sandbox"
 }
 
-variable location {
-    default = "centralus"
+variable "dns_prefix" {
+    default = "silvios-sandbox"
+}
+
+variable environment_name {
+    default = "sandbox"
 }
 
 variable orchestrator_version {
@@ -35,7 +27,7 @@ variable nodepool_os_disk_type {
 }
 
 variable nodepool_max_pods {
-    default = "150"
+    default = 150
 }
 
 variable nodepool_node_count {
