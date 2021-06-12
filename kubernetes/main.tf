@@ -1,35 +1,35 @@
 resource "azurerm_resource_group" "default" {
-    name     = "sandbox-centralus"
-    location = "centralus"
+    name     = "${var.resource_group_name}"
+    location = "${var.location}"
 }
 
 resource "azurerm_kubernetes_cluster" "default" {
-    name                = "sandbox-centralus-aks"
-    dns_prefix          = "silvios-sandbox"
+    name                = "${var.cluster_name}-${var.location}-aks"
+    dns_prefix          = "${var.dns_prefix}"
     location            = azurerm_resource_group.default.location
     resource_group_name = azurerm_resource_group.default.name
 
     default_node_pool {
         name                         = "systempool"
-        orchestrator_version         = "1.19.11"
+        orchestrator_version         = "${var.orchestrator_version}"
         enable_auto_scaling          = true
-        node_count                   = 1
-        min_count                    = 1
-        max_count                    = 5
-        max_pods                     = 150
+        node_count                   = "${var.nodepool_node_count}"
+        min_count                    = "${var.nodepool_min_count}"
+        max_count                    = "${var.nodepool_max_count}"
+        max_pods                     = "${var.nodepool_max_pods}"
         only_critical_addons_enabled = true
         type                         = "VirtualMachineScaleSets"
-        vm_size                      = "Standard_D4s_v3"
+        vm_size                      = "${var.nodepool_vm_size}"
         os_disk_type                 = "Managed"
 
         upgrade_settings {
-            max_surge = "33%"
+            max_surge = "${var.nodepool_default_max_surge}"
         }
     }
 
     network_profile {
-        load_balancer_sku = "Standard"
-        network_plugin = "azure"
+        load_balancer_sku = "${var.load_balancer_sku}"
+        network_plugin = "${var.network_plugin}"
     }
 
     identity {
@@ -75,16 +75,17 @@ resource "azurerm_kubernetes_cluster" "default" {
 resource "azurerm_kubernetes_cluster_node_pool" "default" {
     kubernetes_cluster_id = azurerm_kubernetes_cluster.default.id
     name                  = "userpool"
+    orchestrator_version  = "${var.orchestrator_version}"
     enable_auto_scaling   = true
-    node_count            = 1
-    min_count             = 1
-    max_count             = 5
-    max_pods              = 150
+    node_count            = "${var.nodepool_node_count}"
+    min_count             = "${var.nodepool_min_count}"
+    max_count             = "${var.nodepool_max_count}"
+    max_pods              = "${var.nodepool_max_pods}"
     mode                  = "User"
-    vm_size               = "Standard_D4s_v3"
+    vm_size               = "${var.nodepool_vm_size}"
     os_disk_type          = "Managed"
     
     upgrade_settings {
-        max_surge = "50%"
+        max_surge = "${var.nodepool_user_max_surge}"
     }
 }
