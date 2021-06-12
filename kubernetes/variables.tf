@@ -6,6 +6,14 @@ variable location {
     default = ""
 }
 
+variable vnet_address_space {
+    default = "10.240.0.0/17"
+}
+
+variable subnet_address_prefixes {
+    default = "10.240.0.0/18"
+}
+
 variable cluster_name {
     default = "demo"
 }
