@@ -1,5 +1,9 @@
+variable environment {
+    default = ""
+}
+
 variable location {
-    default = "centralus"
+    default = ""
 }
 
 variable cluster_name {
@@ -12,10 +16,6 @@ variable resource_group_name {
 
 variable "dns_prefix" {
     default = "silvios-sandbox"
-}
-
-variable environment_name {
-    default = "sandbox"
 }
 
 variable orchestrator_version {

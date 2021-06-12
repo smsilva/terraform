@@ -1,7 +1,4 @@
-location: "centralus"
 resource_group_name: "sandbox"
-
-environment_name: "sandbox"
 
 cluster_name: "demo"
 dns_prefix: "silvios"

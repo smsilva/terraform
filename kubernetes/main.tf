@@ -1,19 +1,19 @@
 locals {
     tags = {
-        Environment = "${local.common.environment_name}"
+        Environment = "${var.environment}"
     }
-    common = yamldecode(file("./variables/sandbox.yaml"))
+    common = yamldecode(file("./variables/${var.environment}-${var.location}.yaml"))
 }
 
 resource "azurerm_resource_group" "default" {
-    name     = "${local.common.resource_group_name}-${local.common.location}"
-    location = local.common.location
+    name     = "${local.common.resource_group_name}-${var.location}"
+    location = var.location
     tags     = local.tags
 }
 
 resource "azurerm_kubernetes_cluster" "default" {
-    name                = "${local.common.cluster_name}-${local.common.environment_name}-${local.common.location}-aks"
-    dns_prefix          = "${local.common.dns_prefix}-${local.common.environment_name}-${local.common.cluster_name}"
+    name                = "${local.common.cluster_name}-${var.environment}-${var.location}-aks"
+    dns_prefix          = "${local.common.dns_prefix}-${var.environment}-${local.common.cluster_name}"
     location            = azurerm_resource_group.default.location
     resource_group_name = azurerm_resource_group.default.name
 
