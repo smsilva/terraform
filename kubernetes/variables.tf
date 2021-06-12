@@ -7,7 +7,7 @@ variable location {
 }
 
 variable cluster_name {
-    default = "sandbox"
+    default = "demo"
 }
 
 variable resource_group_name {
@@ -15,7 +15,7 @@ variable resource_group_name {
 }
 
 variable "dns_prefix" {
-    default = "silvios-sandbox"
+    default = "silvios"
 }
 
 variable orchestrator_version {

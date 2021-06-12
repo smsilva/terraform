@@ -12,14 +12,14 @@ resource "azurerm_resource_group" "default" {
 }
 
 resource "azurerm_virtual_network" "vnet" {
-  name                = "${local.common.cluster_name}-vnet"
+  name                = "${local.common.cluster_name}-${var.environment}-${var.location}-vnet"
   location            = azurerm_resource_group.default.location
   resource_group_name = azurerm_resource_group.default.name
   address_space       = ["10.1.0.0/17"]
 }
 
 resource "azurerm_subnet" "private_subnet" {
-  name                 = "${local.common.cluster_name}-private-subnet"
+  name                 = "${local.common.cluster_name}-${var.environment}-${var.location}-private-subnet"
   virtual_network_name = azurerm_virtual_network.vnet.name
   resource_group_name  = azurerm_resource_group.default.name
   address_prefixes     = ["10.1.0.0/18"]
