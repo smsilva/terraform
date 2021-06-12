@@ -11,6 +11,20 @@ resource "azurerm_resource_group" "default" {
     tags     = local.tags
 }
 
+resource "azurerm_virtual_network" "vnet" {
+  name                = "${local.common.cluster_name}-vnet"
+  location            = azurerm_resource_group.default.location
+  resource_group_name = azurerm_resource_group.default.name
+  address_space       = ["10.1.0.0/17"]
+}
+
+resource "azurerm_subnet" "private_subnet" {
+  name                 = "${local.common.cluster_name}-private-subnet"
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  resource_group_name  = azurerm_resource_group.default.name
+  address_prefixes     = ["10.1.0.0/18"]
+}
+
 resource "azurerm_kubernetes_cluster" "default" {
     name                = "${local.common.cluster_name}-${var.environment}-${var.location}-aks"
     dns_prefix          = "${local.common.dns_prefix}-${var.environment}-${local.common.cluster_name}"
@@ -28,6 +42,7 @@ resource "azurerm_kubernetes_cluster" "default" {
         only_critical_addons_enabled = true
         type                         = "VirtualMachineScaleSets"
         vm_size                      = "${local.common.nodepool_vm_size}"
+        vnet_subnet_id               = azurerm_subnet.private_subnet.id
         os_disk_type                 = "${local.common.nodepool_os_disk_type}"
 
         upgrade_settings {
@@ -89,8 +104,21 @@ resource "azurerm_kubernetes_cluster_node_pool" "default" {
     mode                  = "User"
     vm_size               = "${local.common.nodepool_vm_size}"
     os_disk_type          = "${local.common.nodepool_os_disk_type}"
+    vnet_subnet_id        = azurerm_subnet.private_subnet.id
     
     upgrade_settings {
         max_surge = "${local.common.nodepool_user_max_surge}"
     }
+}
+
+resource "azurerm_role_assignment" "resource_group" {
+  scope                = azurerm_resource_group.default.id
+  role_definition_name = "Contributor"
+  principal_id         = azurerm_kubernetes_cluster.default.kubelet_identity[0].object_id
+}
+
+resource "azurerm_role_assignment" "aks_subnet" {
+  scope                = azurerm_subnet.private_subnet.id
+  role_definition_name = "Network Contributor"
+  principal_id         = azurerm_kubernetes_cluster.default.kubelet_identity[0].object_id
 }

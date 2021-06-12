@@ -27,7 +27,7 @@ variable nodepool_os_disk_type {
 }
 
 variable nodepool_max_pods {
-    default = 150
+    default = 125
 }
 
 variable nodepool_node_count {
