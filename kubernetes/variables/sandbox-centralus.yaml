@@ -7,7 +7,7 @@ orchestrator_version: "1.20.7"
 nodepool_node_count: 1
 nodepool_min_count: 1
 nodepool_max_count: 5
-nodepool_max_pods: 125
+nodepool_max_pods: 100
 nodepool_vm_size: "Standard_D4s_v3"
 nodepool_os_disk_type: "Managed"
 nodepool_default_max_surge: 33%
@@ -15,8 +15,8 @@ nodepool_user_max_surge: 50%
 
 network_plugin: "azure"
 network_policy: "azure"
-vnet_address_space: "10.240.0.0/17"
-subnet_address_prefixes: "10.240.0.0/18"
+vnet_address_space: "10.100.0.0/16"      # 10.100.0.1 - 10.100.255.254 (65,534 usable hosts)
+subnet_address_prefixes: "10.100.0.0/20" # 10.100.0.1 - 10.100.15.254  ( 4,094 usable hosts)
 load_balancer_sku: "Standard"
 
 admin_group_object_ids:
