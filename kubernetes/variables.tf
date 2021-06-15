@@ -66,6 +66,10 @@ variable network_plugin {
     default = "azure"
 }
 
+variable network_policy {
+  default = "azure"
+}
+
 variable load_balancer_sku {
     default = "Standard"
 }

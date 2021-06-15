@@ -53,6 +53,7 @@ resource "azurerm_kubernetes_cluster" "default" {
     network_profile {
         load_balancer_sku = "${local.common.load_balancer_sku}"
         network_plugin = "${local.common.network_plugin}"
+        network_policy = "${local.common.network_policy}"
     }
 
     identity {
