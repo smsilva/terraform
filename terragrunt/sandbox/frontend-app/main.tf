@@ -21,7 +21,7 @@ provider "azurerm" {
 }
 
 locals {
-    common = yamldecode(file("../environments/default.yaml"))
+    common = yamldecode(file("../variables.yaml"))
 }
 
 resource "azurerm_resource_group" "default" {
