@@ -1,4 +1,4 @@
-kubernetes/.terraform.*
-kubernetes/.terraform/*
-kubernetes/terraform.tfstate
-kubernetes/terraform.tfstate.backup
+**/.terraform.*
+**/.terraform/*
+**/terraform.tfstate
+**/terraform.tfstate.backup
