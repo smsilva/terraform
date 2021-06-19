@@ -7,10 +7,10 @@ terraform {
   }
 
   backend "azurerm" {
-    resource_group_name   = "terraform"
-    storage_account_name  = "silviosterraform"
-    container_name        = "state"
-    key                   = "frontend-app.json"
+    resource_group_name   = "iac"
+    storage_account_name  = "silvios"
+    container_name        = "terraform"
+    key                   = "sandbox/frontend-app/state.json"
   }
 }
 

@@ -1,9 +1,11 @@
 #!/bin/bash
 
+set -e
+
 LOCATION="centralus"
-RESOURCE_GROUP_NAME="terraform"
-STORAGE_ACCOUNT_NAME="${USER}terraform"
-CONTAINER_NAME="state"
+RESOURCE_GROUP_NAME="iac"
+STORAGE_ACCOUNT_NAME="${USER}"
+CONTAINER_NAME="terraform"
 
 # Create resource group
 az group create \
