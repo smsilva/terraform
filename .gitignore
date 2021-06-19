@@ -1,6 +1,4 @@
+kubernetes/.terraform.*
 kubernetes/.terraform/*
-kubernetes/.terraform.plan
-kubernetes/.terraform.lock.hcl
-kubernetes/.terraform.tfstate.lock.info
 kubernetes/terraform.tfstate
 kubernetes/terraform.tfstate.backup
