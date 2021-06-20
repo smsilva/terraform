@@ -40,7 +40,7 @@ resource "azurerm_kubernetes_cluster" "default" {
     min_count                    = local.common.nodepool_min_count
     max_count                    = local.common.nodepool_max_count
     max_pods                     = local.common.nodepool_max_pods
-    only_critical_addons_enabled = true
+    only_critical_addons_enabled = false
     type                         = "VirtualMachineScaleSets"
     vm_size                      = local.common.nodepool_vm_size
     vnet_subnet_id               = azurerm_subnet.private_subnet.id
@@ -95,6 +95,7 @@ resource "azurerm_kubernetes_cluster" "default" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "default" {
+  count = 0
   kubernetes_cluster_id = azurerm_kubernetes_cluster.default.id
   name                  = "userpool"
   orchestrator_version  = local.common.orchestrator_version
