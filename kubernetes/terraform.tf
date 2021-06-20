@@ -5,6 +5,14 @@ terraform {
       version = "=2.63.0"
     }
   }
+
+  backend "azurerm" {
+    container_name       = "terraform"
+    key                  = "env0/kubernetes/state.json"
+    resource_group_name  = "iac"
+    storage_account_name = "silvios"
+  }
+
 }
 
 provider "azurerm" {

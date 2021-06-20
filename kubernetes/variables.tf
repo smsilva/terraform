@@ -1,9 +1,9 @@
 variable environment {
-    default = ""
+    default = "sandbox"
 }
 
 variable location {
-    default = ""
+    default = "centralus"
 }
 
 variable vnet_address_space {
