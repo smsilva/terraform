@@ -4,9 +4,9 @@ cluster_name: "demo"
 dns_prefix: "silvios"
 orchestrator_version: "1.19.11"
 
-nodepool_node_count: 3
+nodepool_node_count: 1
 nodepool_min_count: 1
-nodepool_max_count: 5
+nodepool_max_count: 10
 nodepool_max_pods: 100
 nodepool_vm_size: "Standard_D4s_v3"
 nodepool_os_disk_type: "Managed"
