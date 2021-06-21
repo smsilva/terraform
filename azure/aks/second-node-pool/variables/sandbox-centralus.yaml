@@ -10,6 +10,7 @@ nodepool_max_count: 10
 nodepool_max_pods: 100
 nodepool_vm_size: "Standard_D4s_v3"
 nodepool_os_disk_type: "Managed"
+nodepool_os_disk_size_gb: "100"
 nodepool_default_max_surge: 33%
 nodepool_user_max_surge: 50%
 

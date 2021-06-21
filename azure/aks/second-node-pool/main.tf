@@ -44,6 +44,7 @@ resource "azurerm_kubernetes_cluster" "default" {
     vm_size                      = local.common.nodepool_vm_size
     vnet_subnet_id               = azurerm_subnet.private_subnet.id
     os_disk_type                 = local.common.nodepool_os_disk_type
+    os_disk_size_gb              = local.common.nodepool_os_disk_size_gb
 
     upgrade_settings {
       max_surge = local.common.nodepool_default_max_surge
@@ -105,6 +106,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "default" {
   max_pods              = local.common.nodepool_max_pods
   vm_size               = local.common.nodepool_vm_size
   os_disk_type          = "Ephemeral"
+  os_disk_size_gb       = "100"
   vnet_subnet_id        = azurerm_subnet.private_subnet.id
 
   upgrade_settings {
