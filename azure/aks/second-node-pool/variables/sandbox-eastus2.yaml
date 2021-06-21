@@ -15,8 +15,8 @@ nodepool_user_max_surge: 50%
 
 network_plugin: "azure"
 network_policy: "azure"
-vnet_address_space: "10.101.0.0/16"      # 10.100.0.1 - 10.100.255.254 (65,534 usable hosts)
-subnet_address_prefixes: "10.101.0.0/20" # 10.100.0.1 - 10.100.15.254  ( 4,094 usable hosts)
+vnet_address_space: "10.100.0.0/16"      # 10.100.0.1 - 10.100.255.254 (65,534 usable hosts)
+subnet_address_prefixes: "10.100.0.0/20" # 10.100.0.1 - 10.100.15.254  ( 4,094 usable hosts)
 load_balancer_sku: "Standard"
 
 admin_group_object_ids:
