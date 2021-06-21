@@ -5,6 +5,11 @@ terraform {
       version = "3.72.0"
     }
   }
+
+  backend "gcs" {
+    bucket = "silvios"
+    prefix = "terraform/state"
+  }
 }
 
 provider "google" {
