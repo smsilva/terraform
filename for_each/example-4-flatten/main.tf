@@ -79,6 +79,7 @@ output "subnets-3" {
   value = local.subnets_map
 }
 
+# https://www.terraform.io/docs/language/meta-arguments/for_each.html#chaining-for_each-between-resources
 # https://stackoverflow.com/questions/57570505/terraform-how-to-use-for-each-loop-on-a-list-of-objects-to-create-resources
 
 # resource "aws_subnet" "subnets-dev" {
