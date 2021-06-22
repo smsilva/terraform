@@ -61,6 +61,10 @@ locals {
       }
     ]
   ])
+
+  subnets_map = {
+    for subnet in local.subnets : "${subnet.resource}:${subnet.availability_zone}" => subnet
+  }
 }
 
 output "subnets-1" {
@@ -70,3 +74,21 @@ output "subnets-1" {
 output "subnets-2" {
   value = local.subnets
 }
+
+output "subnets-3" {
+  value = local.subnets_map
+}
+
+# https://stackoverflow.com/questions/57570505/terraform-how-to-use-for-each-loop-on-a-list-of-objects-to-create-resources
+
+# resource "aws_subnet" "subnets-dev" {
+#   for_each          = local.subnets_map
+#   vpc_id            = aws_vpc.vpc-dev.id
+#   cidr_block        = each.value.cidr_block
+#   availability_zone = each.value.availability_zone
+
+#   tags = {
+#     Name        = "subnet-dev-${each.value.resource}-${each.value.availability_zone}"
+#     environment = "dev"
+#   }
+# }
