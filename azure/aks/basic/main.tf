@@ -44,9 +44,10 @@ resource "azurerm_role_assignment" "resource_group" {
 
 output "cluster" {
   value = {
-    id               = azurerm_kubernetes_cluster.default.id
-    identity         = azurerm_kubernetes_cluster.default.identity[0]
-    kubelet_identity = azurerm_kubernetes_cluster.default.kubelet_identity[0]
+    id                  = azurerm_kubernetes_cluster.default.id
+    identity            = azurerm_kubernetes_cluster.default.identity[0]
+    kubelet_identity    = azurerm_kubernetes_cluster.default.kubelet_identity[0]
+    node_resource_group = azurerm_kubernetes_cluster.default.node_resource_group
   }
 }
 
