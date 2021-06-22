@@ -2,7 +2,7 @@ terraform {
   required_providers {
     env0 = {
       source = "env0/env0"
-      version = "0.0.9"
+      version = "0.0.10"
     }
   }
 }
