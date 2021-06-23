@@ -2,6 +2,10 @@ variable "prefix" {
   default = "tfvmex"
 }
 
+variable "suffix" {
+  default = "0"
+}
+
 resource "azurerm_resource_group" "main" {
   name     = "${var.prefix}-resources"
   location = "West Europe"
@@ -22,20 +26,19 @@ resource "azurerm_subnet" "internal" {
 }
 
 resource "azurerm_network_interface" "main" {
-  name                = "${var.prefix}-nic"
+  name                = "${var.prefix}-nic-${var.suffix}"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 
   ip_configuration {
-    name                          = "testconfiguration1"
+    name                          = "testconfiguration${var.suffix}"
     subnet_id                     = azurerm_subnet.internal.id
     private_ip_address_allocation = "Dynamic"
   }
 }
 
 resource "azurerm_virtual_machine" "main" {
-  count                            = 1
-  name                             = "${var.prefix}-vm-${count.index}"
+  name                             = "${var.prefix}-vm-${var.suffix}"
   location                         = azurerm_resource_group.main.location
   resource_group_name              = azurerm_resource_group.main.name
   network_interface_ids            = [azurerm_network_interface.main.id]
@@ -51,7 +54,7 @@ resource "azurerm_virtual_machine" "main" {
   }
 
   storage_os_disk {
-    name              = "myosdisk${count.index}"
+    name              = "myosdisk${var.suffix}"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
@@ -64,7 +67,7 @@ resource "azurerm_virtual_machine" "main" {
   }
 
   os_profile_linux_config {
-    disable_password_authentication = true
+    disable_password_authentication = false
   }
 
 }
