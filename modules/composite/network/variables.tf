@@ -1,3 +1,3 @@
 variable "cidr_block" {
-  default = ""
+  default = "10.1.0.0/16"
 }
