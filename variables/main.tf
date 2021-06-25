@@ -41,8 +41,8 @@ module "app_security_group" {
   ingress_cidr_blocks = module.vpc.public_subnets_cidr_blocks
 
   tags = {
-    project     = "project-alpha",
-    environment = "dev"
+    project     = "${var.resource_tags["project"]}",
+    environment = "${var.resource_tags["environment"]}"
   }
 }
 
@@ -57,8 +57,8 @@ module "lb_security_group" {
   ingress_cidr_blocks = ["0.0.0.0/0"]
 
   tags = {
-    project     = "project-alpha",
-    environment = "dev"
+    project     = "${var.resource_tags["project"]}",
+    environment = "${var.resource_tags["environment"]}"
   }
 }
 
@@ -98,8 +98,8 @@ module "elb_http" {
   }
 
   tags = {
-    project     = "project-alpha",
-    environment = "dev"
+    project     = "${var.resource_tags["project"]}",
+    environment = "${var.resource_tags["environment"]}"
   }
 }
 
@@ -112,7 +112,7 @@ module "ec2_instances" {
   security_group_ids = [module.app_security_group.this_security_group_id]
 
   tags = {
-    project     = "project-alpha",
-    environment = "dev"
+    project     = "${var.resource_tags["project"]}",
+    environment = "${var.resource_tags["environment"]}"
   }
 }
