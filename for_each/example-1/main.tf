@@ -1,5 +1,5 @@
 module "prefix" {
-  source = "../modules/test"
+  source = "../../modules/test"
 
   for_each = {
     a_group        = "eastus"
