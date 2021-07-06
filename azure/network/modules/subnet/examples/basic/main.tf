@@ -2,6 +2,18 @@ provider "azurerm" {
   features {}
 }
 
+locals {
+  subnets = [
+    { cidr = "10.0.1.0/29", name = "AzureBastionSubnet" },
+    { cidr = "10.0.2.0/27", name = "snet-vpn-gateway" },
+    { cidr = "10.0.3.0/29", name = "snet-firewall" },
+  ]
+
+  subnets_map = {
+    for subnet in local.subnets : "${subnet.name}" => subnet
+  }
+}
+
 resource "azurerm_resource_group" "example" {
   name     = "example"
   location = "centralus"
@@ -15,11 +27,11 @@ module "vnet" {
   resource_group = azurerm_resource_group.example
 }
 
-module "subnet" {
-  source = "../../"
-
-  name           = "AzureBastionSubnet"
-  cidrs          = ["10.0.1.0/29"]
+module "subnets" {
+  for_each       = local.subnets_map
+  source         = "../../"
+  name           = each.value.name
+  cidrs          = [each.value.cidr]
   vnet           = module.vnet
   resource_group = azurerm_resource_group.example
 }
