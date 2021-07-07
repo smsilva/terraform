@@ -8,7 +8,7 @@ resource "azurerm_resource_group" "example" {
 }
 
 module "vnet" {
-  source = "../../"
+  source = "../../vnet"
 
   name           = "vnet-hub"
   cidr           = ["10.0.0.0/20"]
