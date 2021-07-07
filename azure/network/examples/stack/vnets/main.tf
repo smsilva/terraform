@@ -11,10 +11,12 @@ locals {
   subnets = flatten([
     for key in keys(var.vnets) : [
       for subnet in var.vnets[key].subnets : {
-        vnet_name   = key
-        vnet_cidr   = var.vnets[key].cidr
-        subnet_name = subnet.name
-        subnet_cidr = subnet.cidr
+        name = subnet.name
+        cidr = subnet.cidr
+        vnet = {
+          name = key
+          cidr = var.vnets[key].cidr
+        }
       }
     ]
   ])
@@ -24,7 +26,7 @@ locals {
   }
 
   subnets_map = {
-    for subnet in local.subnets : "${subnet.subnet_name}" => subnet
+    for subnet in local.subnets : "${subnet.name}" => subnet
   }
 }
 
@@ -39,8 +41,8 @@ module "vnets" {
 module "subnets" {
   for_each       = local.subnets_map
   source         = "../../../modules/subnet"
-  name           = each.value.subnet_name
-  cidrs          = [each.value.subnet_cidr]
-  vnet           = module.vnets[each.value.vnet_name].vnet
+  name           = each.value.name
+  cidrs          = [each.value.cidr]
+  vnet           = module.vnets[each.value.vnet.name].vnet
   resource_group = var.resource_group
 }
