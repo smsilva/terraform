@@ -6,6 +6,7 @@ module "resource_group" {
 
 module "vnets" {
   source         = "./vnets"
+  vnets          = var.vnets
   location       = var.location
   resource_group = module.resource_group.resource_group
 }
