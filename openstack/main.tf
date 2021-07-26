@@ -55,6 +55,12 @@ resource "openstack_compute_instance_v2" "server_2" {
   network {
     name = openstack_networking_network_v2.network_1.name
   }
+
+  depends_on = [
+    openstack_networking_subnet_v2.subnet_1,
+    openstack_compute_floatingip_v2.floatingip_2,
+    openstack_networking_router_interface_v2.router_1_interface_1
+  ]
 }
 
 resource "openstack_compute_floatingip_v2" "floatingip_1" {
@@ -73,6 +79,10 @@ resource "openstack_compute_floatingip_associate_v2" "floatingip_1_server_1" {
 resource "openstack_compute_floatingip_associate_v2" "floatingip_2_server_2" {
   floating_ip = openstack_compute_floatingip_v2.floatingip_2.address
   instance_id = openstack_compute_instance_v2.server_2.id
+
+  depends_on = [
+    openstack_networking_router_interface_v2.router_1_interface_1
+  ]
 }
 
 resource "openstack_networking_network_v2" "network_1" {
