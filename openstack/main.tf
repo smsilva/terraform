@@ -3,6 +3,11 @@ data "openstack_compute_flavor_v2" "m1_tinny" {
   ram   = 512
 }
 
+data "openstack_compute_flavor_v2" "m2_medium" {
+  vcpus = 2
+  ram   = 4096
+}
+
 data "openstack_images_image_v2" "cirros" {
   name        = "cirros"
   most_recent = true
@@ -10,6 +15,11 @@ data "openstack_images_image_v2" "cirros" {
   properties = {
     key = "value"
   }
+}
+
+data "openstack_images_image_v2" "ubuntu_git" {
+  name        = "ubuntu-git"
+  most_recent = true
 }
 
 data "openstack_networking_network_v2" "internal" {
@@ -43,8 +53,8 @@ resource "openstack_compute_instance_v2" "server_1" {
 
 resource "openstack_compute_instance_v2" "server_2" {
   name            = "server-02"
-  image_id        = data.openstack_images_image_v2.cirros.id
-  flavor_id       = data.openstack_compute_flavor_v2.m1_tinny.flavor_id
+  image_id        = data.openstack_images_image_v2.ubuntu_git.id
+  flavor_id       = data.openstack_compute_flavor_v2.m2_medium.flavor_id
   key_pair        = openstack_compute_keypair_v2.silvios.name
   security_groups = ["default"]
 
