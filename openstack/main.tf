@@ -12,16 +12,28 @@ data "openstack_images_image_v2" "cirros" {
   }
 }
 
-resource "openstack_compute_keypair_v2" "test-keypair" {
-  name       = "my-keypair"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAjpC1hwiOCCmKEWxJ4qzTTsJbKzndLotBCz5PcwtUnflmU+gHJtWMZKpuEGVi29h0A/+ydKek1O18k10Ff+4tyFjiHDQAnOfgWf7+b1yK+qDip3X1C0UPMbwHlTfSGWLGZqd9LvEFx9k3h/M+VtMvwR1lJ9LUyTAImnNjWG7TaIPmui30HvM2UiFEmqkr4ijq45MyX2+fLIePLRIF61p4whjHAQYufqyno3BS48icQb4p6iVEZPo4AE2o9oIyQvj2mx4dk5Y8CgSETOZTYDOR3rU2fZTRDRgPJDH9FWvQjF5tA0p3d9CoWWd2s6GKKbfoUIi8R/Db1BSPJwkqB"
+data "openstack_networking_network_v2" "internal" {
+  name = "test"
 }
 
-resource "openstack_compute_instance_v2" "basic" {
-  name            = "basic"
+data "openstack_networking_network_v2" "public" {
+  name = "external"
+}
+
+resource "openstack_compute_floatingip_v2" "floatingip_1" {
+  pool = data.openstack_networking_network_v2.public.name
+}
+
+resource "openstack_compute_keypair_v2" "silvios" {
+  name       = "silvios"
+  public_key = file("/home/silvios/.ssh/id_rsa.pub")
+}
+
+resource "openstack_compute_instance_v2" "server_1" {
+  name            = "server-01"
   image_id        = data.openstack_images_image_v2.cirros.id
   flavor_id       = data.openstack_compute_flavor_v2.m1_tinny.flavor_id
-  key_pair        = "microstack"
+  key_pair        = openstack_compute_keypair_v2.silvios.name
   security_groups = ["default"]
 
   metadata = {
@@ -29,10 +41,11 @@ resource "openstack_compute_instance_v2" "basic" {
   }
 
   network {
-    name = "test"
+    name = data.openstack_networking_network_v2.internal.name
   }
 }
 
-output "image" {
-  value = data.openstack_images_image_v2.cirros.id
+output "server_1" {
+  value = openstack_compute_instance_v2.server_1
+  sensitive = true
 }
