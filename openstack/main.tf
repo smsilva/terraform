@@ -46,10 +46,6 @@ resource "openstack_compute_instance_v2" "server_1" {
   key_pair        = openstack_compute_keypair_v2.silvios.name
   security_groups = ["default"]
 
-  metadata = {
-    this = "that"
-  }
-
   network {
     name = data.openstack_networking_network_v2.internal.name
   }
@@ -62,18 +58,14 @@ resource "openstack_compute_instance_v2" "server_2" {
   key_pair        = openstack_compute_keypair_v2.silvios.name
   security_groups = ["default"]
 
-  metadata = {
-    this = "that"
-  }
-
   network {
     name = openstack_networking_network_v2.network_1.name
   }
 
   depends_on = [
     openstack_networking_subnet_v2.subnet_1,
-    openstack_compute_floatingip_v2.floatingip_2,
-    openstack_networking_router_interface_v2.router_1_interface_1
+    openstack_networking_router_interface_v2.router_1_interface_1,
+    openstack_compute_floatingip_v2.floatingip_2
   ]
 }
 
