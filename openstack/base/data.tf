@@ -13,6 +13,11 @@ data "openstack_images_image_v2" "cirros" {
   most_recent = true
 }
 
+data "openstack_images_image_v2" "ubuntu" {
+  name        = "ubuntu-focal-20210720-amd64-base"
+  most_recent = true
+}
+
 data "openstack_networking_network_v2" "internal" {
   name = "test"
 }
