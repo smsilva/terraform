@@ -3,7 +3,7 @@
         {
             "type": "openstack",
             "cloud": "openstack",
-            "region": "microstack",
+            "region": "RegionOne",
             "image_name": "ubuntu-custom",
             "source_image": "${image_id}",
             "flavor": "3",
