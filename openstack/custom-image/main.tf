@@ -3,17 +3,25 @@ resource "openstack_compute_keypair_v2" "silvios" {
   public_key = file("/home/silvios/.ssh/id_rsa.pub")
 }
 
-resource "openstack_images_image_v2" "ubuntu" {
-  name             = "ubuntu-20.04"
-  image_source_url = "https://cloud-images.ubuntu.com/focal/20210810/focal-server-cloudimg-amd64.img"
+resource "openstack_images_image_v2" "ubuntu_focal_server" {
+  name             = "focal-server-cloudimg-amd64"
+  image_source_url = "https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img"
   container_format = "bare"
   disk_format      = "qcow2"
   min_disk_gb      = 20
   min_ram_mb       = 2048
 }
 
+data "openstack_networking_network_v2" "public" {
+  name = "public"
+}
+
 resource "openstack_compute_floatingip_v2" "floatingip_1" {
   pool = data.openstack_networking_network_v2.public.name
+}
+
+data "openstack_networking_network_v2" "private" {
+  name = "private"
 }
 
 data "template_file" "packer" {

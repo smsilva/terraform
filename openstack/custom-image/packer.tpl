@@ -4,7 +4,7 @@
             "type": "openstack",
             "cloud": "openstack",
             "region": "RegionOne",
-            "image_name": "ubuntu-custom",
+            "image_name": "focal-server-cloudimg-amd64-base",
             "source_image": "${image_id}",
             "flavor": "3",
             "ssh_ip_version": "4",
