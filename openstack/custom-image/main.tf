@@ -27,7 +27,7 @@ data "openstack_networking_network_v2" "private" {
 data "template_file" "packer" {
   template = file("${path.module}/packer.tpl")
   vars = {
-    image_id             = "${openstack_images_image_v2.ubuntu.id}"
+    image_id             = "${openstack_images_image_v2.ubuntu_focal_server.id}"
     network_internal_id  = "${data.openstack_networking_network_v2.private.id}"
     ssh_keypair_name     = "${openstack_compute_keypair_v2.silvios.name}"
     ssh_private_key_file = "/home/silvios/.ssh/id_rsa"
