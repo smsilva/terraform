@@ -10,7 +10,7 @@ data "openstack_compute_flavor_v2" "medium" {
 
 variable "image_name" {
   type = string
-  default = "focal-server-cloudimg-amd64"
+  default = "focal-server-cloudimg-amd64-base"
 }
 
 data "openstack_images_image_v2" "ubuntu_focal_server" {

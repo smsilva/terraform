@@ -22,7 +22,8 @@
     "provisioners": [
         {
             "script": "setup_vm.sh",
-            "type": "shell"
+            "type": "shell",
+            "max_retries" : "5"
         }
     ]
 }
