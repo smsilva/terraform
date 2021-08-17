@@ -22,3 +22,7 @@ echo "dist-upgrade: $?"
 
 DEBIAN_FRONTEND=noninteractive apt-get -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" autoremove
 echo "autoremove: $?"
+
+apt-get install --yes \
+  net-tools \
+  ntp
