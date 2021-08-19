@@ -5,3 +5,4 @@
 **/*.backup
 **/*.json
 **/chicken-egg/2-migrate-local-state/backend.tf
+**/.idea/
