@@ -1,9 +1,9 @@
 module "backend" {
   source = "../modules/storage-account"
 
-  region               = "centralus"
-  resource_group_name  = "iac-temp"
-  storage_account_name = "silviosiac"
+  region               = var.region
+  resource_group_name  = var.resource_group_name
+  storage_account_name = var.storage_account_name
 }
 
 data "template_file" "backend" {
@@ -21,9 +21,4 @@ resource "local_file" "backend" {
   content         = data.template_file.backend.rendered
   filename        = "${path.module}/../2-migrate-local-state/backend.tf"
   file_permission = "0644"
-}
-
-output "primary_access_key" {
-  value     = module.backend.storage_account.primary_access_key
-  sensitive = true
 }
