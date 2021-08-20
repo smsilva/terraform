@@ -9,17 +9,29 @@ export ARM_CLIENT_SECRET=YOUR_CLIENT_ID_SECRET
 export ARM_ACCESS_KEY=YOUR_AZURE_STORAGE_ACCOUNT_PRIMARY_ACCESS_KEY
 ```
 
-### Build Docker Images
+### Build Base Image
 ```bash
+cd stack/build/base-image
+./build ../../src
+
+```
+
+### Build Custom Image
+```bash
+cd ../../build/custom-image/
 ./build
 ```
 
-### Execute a Plan followed by an Apply with -auto-approve
+### Execute a Custom Image Test
 ```bash
-./test
-```
-
-### Remove Docker Images
-```bash
-./clear
+docker run \
+  -v ${HOME}/.ssh:/root/.ssh \
+  -v ${PWD}/output:/stack/output/ \
+  -e ARM_CLIENT_ID=${ARM_CLIENT_ID?} \
+  -e ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET?} \
+  -e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID?} \
+  -e ARM_TENANT_ID=${ARM_TENANT_ID?} \
+  -e ARM_ACCESS_KEY=${ARM_ACCESS_KEY?} \
+  -e ENVIRONMENT_REGION="centralus" \
+  iac-stack-demo:1.2.0-sandbox
 ```

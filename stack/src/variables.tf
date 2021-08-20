@@ -7,5 +7,5 @@ variable "region" {
 }
 
 variable "stack_version" {
-  default = "1.0.0"
+  default = "latest"
 }

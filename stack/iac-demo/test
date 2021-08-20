@@ -1,9 +1,0 @@
-#!/bin/bash
-
-while read IMAGE; do
-  ./azrun ${IMAGE?} plan
-
-  ./azrun ${IMAGE?} apply
-
-  echo ""
-done < images

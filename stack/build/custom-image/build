@@ -1,0 +1,7 @@
+#!/bin/bash
+
+TARGET_DIRECTORY="images"
+
+./configure-build-folders ${TARGET_DIRECTORY?}
+
+./build-images ${TARGET_DIRECTORY?}

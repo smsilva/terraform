@@ -9,4 +9,6 @@
 **/.idea/
 **/images
 **/environments/
+**/images/
 **/.ssh/
+**/base-image/Dockerfile

@@ -1,7 +1,0 @@
-#!/bin/bash
-
-./clear && \
-echo "" && \
-./build && \
-echo "" && \
-./test
