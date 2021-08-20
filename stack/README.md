@@ -18,3 +18,8 @@ export ARM_ACCESS_KEY=YOUR_AZURE_STORAGE_ACCOUNT_PRIMARY_ACCESS_KEY
 ```bash
 ./test
 ```
+
+### Remove Docker Images
+```bash
+./clear
+```
