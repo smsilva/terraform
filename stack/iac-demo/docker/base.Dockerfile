@@ -6,8 +6,7 @@ ADD ./src /stack
 RUN terraform init
 
 FROM base AS package
-RUN rm -rf /stack/.terraform.lock.hcl
-RUN rm -rf /stack/.terraform/terraform.tfstate
+# RUN rm -rf /stack/provider.tf
 
 FROM package AS final
 WORKDIR /stack
