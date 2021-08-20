@@ -25,27 +25,27 @@ echo ""
 create_environment() {
   VARIABLE_ABSOLUT_FILE_NAME=$1
   VARIABLE_FILE_NAME=$(basename ${VARIABLE_ABSOLUT_FILE_NAME?})
-  export ENVIRONMENT_NAME=${VARIABLE_FILE_NAME%.tfvars}
 
+  export ENVIRONMENT_NAME=${VARIABLE_FILE_NAME%.tfvars}
   export BACKEND_RESOURCE_GROUP_NAME="iac-${ENVIRONMENT_NAME?}"
   export BACKEND_STORAGE_ACCOUNT_NAME="silvios"
   export BACKEND_CONTAINER_NAME="terraform"
   export BACKEND_KEY="${BASE_IMAGE_NAME?}-${ENVIRONMENT_NAME?}"
-
   export ENVIRONMENT_CONFIG_FILE="environments/${ENVIRONMENT_NAME?}/config"
-
   export $(cat ${VARIABLE_ABSOLUT_FILE_NAME?} | grep -E "^stack_version" | tr "[:lower:]" "[:upper:]" | tr -d "\"")
 
-  echo "VARIABLE_ABSOLUT_FILE_NAME...: ${VARIABLE_ABSOLUT_FILE_NAME?}"
-  echo "VARIABLE_FILE_NAME...........: ${VARIABLE_FILE_NAME?}"
-  echo "ENVIRONMENT_NAME.............: ${ENVIRONMENT_NAME?}"
-  echo "STACK_VERSION................: ${STACK_VERSION?}"
-  echo "BASE_IMAGE...................: ${BASE_IMAGE?}"
-  echo "BACKEND_RESOURCE_GROUP_NAME..: ${BACKEND_RESOURCE_GROUP_NAME?}"
-  echo "BACKEND_STORAGE_ACCOUNT_NAME.: ${BACKEND_STORAGE_ACCOUNT_NAME?}"
-  echo "BACKEND_CONTAINER_NAME.......: ${BACKEND_CONTAINER_NAME?}"
-  echo "BACKEND_KEY..................: ${BACKEND_KEY?}"
-  echo ""
+  if [[ "${DEBUG}" == "yes" ]]; then
+    echo "VARIABLE_ABSOLUT_FILE_NAME...: ${VARIABLE_ABSOLUT_FILE_NAME?}"
+    echo "VARIABLE_FILE_NAME...........: ${VARIABLE_FILE_NAME?}"
+    echo "ENVIRONMENT_NAME.............: ${ENVIRONMENT_NAME?}"
+    echo "STACK_VERSION................: ${STACK_VERSION?}"
+    echo "BASE_IMAGE...................: ${BASE_IMAGE?}"
+    echo "BACKEND_RESOURCE_GROUP_NAME..: ${BACKEND_RESOURCE_GROUP_NAME?}"
+    echo "BACKEND_STORAGE_ACCOUNT_NAME.: ${BACKEND_STORAGE_ACCOUNT_NAME?}"
+    echo "BACKEND_CONTAINER_NAME.......: ${BACKEND_CONTAINER_NAME?}"
+    echo "BACKEND_KEY..................: ${BACKEND_KEY?}"
+    echo ""
+  fi
 
   mkdir -p environments/${ENVIRONMENT_NAME?}
 
@@ -56,8 +56,6 @@ create_environment() {
   cp templates/build environments/${ENVIRONMENT_NAME?}/build
 
   cp variables/${ENVIRONMENT_NAME?}.tfvars environments/${ENVIRONMENT_NAME?}/terraform.tfvars
-
-  echo ""
 }
 
 for VARIABLE_ABSOLUT_FILE_NAME in $(find variables/ -type f -name "*.tfvars"); do
@@ -74,14 +72,16 @@ done
 [ -e images ] && rm -rf images
 
 for ENVIRONMENT_FOLDER in $(find environments/ -mindepth 1 -maxdepth 1 -type d); do
-  echo "ENVIRONMENT_FOLDER........: ${ENVIRONMENT_FOLDER?}"
 
   . ${ENVIRONMENT_FOLDER?}/config
 
-  echo "ENVIRONMENT_NAME..........: ${ENVIRONMENT_NAME?}"
-  echo "ENVIRONMENT_IMAGE_NAME....: ${ENVIRONMENT_IMAGE_NAME?}"
-  echo "ENVIRONMENT_IMAGE_VERSION.: ${ENVIRONMENT_IMAGE_VERSION?}"
-  echo ""
+  if [[ "${DEBUG}" == "yes" ]]; then
+    echo "ENVIRONMENT_FOLDER........: ${ENVIRONMENT_FOLDER?}"
+    echo "ENVIRONMENT_NAME..........: ${ENVIRONMENT_NAME?}"
+    echo "ENVIRONMENT_IMAGE_NAME....: ${ENVIRONMENT_IMAGE_NAME?}"
+    echo "ENVIRONMENT_IMAGE_VERSION.: ${ENVIRONMENT_IMAGE_VERSION?}"
+    echo ""
+  fi
 
   ENVIRONMENT_FINAL_IMAGE_NAME="${ENVIRONMENT_IMAGE_NAME?}:${ENVIRONMENT_IMAGE_VERSION?}"
 
@@ -90,8 +90,4 @@ for ENVIRONMENT_FOLDER in $(find environments/ -mindepth 1 -maxdepth 1 -type d);
     -f ${ENVIRONMENT_FOLDER?}/Dockerfile ${ENVIRONMENT_FOLDER?}/
 
   echo "${ENVIRONMENT_FINAL_IMAGE_NAME?}" >> images
-
-  echo ""
 done
-
-cat images
