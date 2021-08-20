@@ -17,7 +17,7 @@ resource "azurerm_resource_group" "default" {
 }
 
 module "storage_account_demo" {
-  source = "git@github.com:smsilva/iac-storage-account.git//src?ref=main"
+  source = "git@github.com:smsilva/iac-storage-account.git//src?ref=dummy"
 
   region               = var.region
   resource_group       = azurerm_resource_group.default

@@ -6,7 +6,7 @@ WORKDIR /stack
 ADD ./scripts/run /stack/run
 ADD ./scripts/init /stack/init
 ADD ./src /stack
-ADD ./.ssh /root/
+ADD ./.ssh /root/.ssh/
 RUN find /root/
 RUN chmod 600 /root/.ssh/config
 RUN /stack/init
