@@ -1,4 +1,4 @@
-FROM hashicorp/terraform:1.0.5 AS base
+FROM hashicorp/terraform:${TERRAFORM_VERSION} AS base
 RUN mkdir -p /stack/output
 WORKDIR /stack
 ADD ./scripts/run /stack/run

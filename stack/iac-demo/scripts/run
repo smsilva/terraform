@@ -1,14 +1,28 @@
 #!/bin/sh
 TERRAFORM_COMMAND="${1-plan}"
+TERRAFORM_PLAN_FILE="/stack/output/terraform.plan"
 
-echo "USER=[$(whoami)] WORKDIR=[$(pwd)] COMMAND=[${TERRAFORM_COMMAND}]"
+echo ""
 
-terraform init -reconfigure -upgrade=false
+terraform --version
 
-find /stack/
+echo ""
+echo "Environment"
+echo "- user....: $(whoami)"
+echo "- workdir.: $(pwd)"
+echo "- command.: ${TERRAFORM_COMMAND}"
+echo ""
+
+echo "Backend Configuration"
+echo ""
+echo "/stack/backend.conf:"
+cat /stack/backend.conf
+
+terraform init -reconfigure -upgrade=false -backend-config /stack/backend.conf
 
 if [ "${TERRAFORM_COMMAND}" == "apply" ]; then
-  terraform apply -auto-approve /stack/output/terraform.plan
+  terraform apply -auto-approve ${TERRAFORM_PLAN_FILE?}
+  terraform apply -auto-approve -refresh-only
 else
-  terraform plan -out /stack/output/terraform.plan
+  terraform plan -out ${TERRAFORM_PLAN_FILE?}
 fi

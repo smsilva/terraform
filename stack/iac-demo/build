@@ -1,11 +1,87 @@
 #!/bin/bash
 
 sudo rm -rf output
+sudo rm -rf environments
+
+mkdir environments
+
+export BASE_IMAGE_NAME="iac-stack"
+export BASE_IMAGE_VERSION="1.0.0"
+export BASE_IMAGE="${BASE_IMAGE_NAME?}:${BASE_IMAGE_VERSION?}"
+
+export ENVIRONMENT_TARGET_IMAGE_VERSION="1.0.0"
 
 docker build \
-  -t iac-stack:1.0.0 \
+  -t ${BASE_IMAGE?} \
   -f docker/base.Dockerfile .
-  
-docker build \
-  -t iac-stack-stage:1.0.0 \
-  -f docker/stage.Dockerfile .
+
+create_environment() {
+  VARIABLE_ABSOLUT_FILE_NAME=$1
+  VARIABLE_FILE_NAME=$(basename ${VARIABLE_ABSOLUT_FILE_NAME?})
+  export ENVIRONMENT_NAME=${VARIABLE_FILE_NAME%.tfvars}
+
+  export BACKEND_RESOURCE_GROUP_NAME="iac-${ENVIRONMENT_NAME?}"
+  export BACKEND_STORAGE_ACCOUNT_NAME="silvios"
+  export BACKEND_CONTAINER_NAME="terraform"
+  export BACKEND_KEY="${BASE_IMAGE_NAME?}-${ENVIRONMENT_NAME?}"
+
+  export ENVIRONMENT_CONFIG_FILE="environments/${ENVIRONMENT_NAME?}/config"
+
+  echo "VARIABLE_ABSOLUT_FILE_NAME...: ${VARIABLE_ABSOLUT_FILE_NAME?}"
+  echo "VARIABLE_FILE_NAME...........: ${VARIABLE_FILE_NAME?}"
+  echo "ENVIRONMENT_NAME.............: ${ENVIRONMENT_NAME?}"
+  echo "BASE_IMAGE...................: ${BASE_IMAGE?}"
+  echo "BACKEND_RESOURCE_GROUP_NAME..: ${BACKEND_RESOURCE_GROUP_NAME?}"
+  echo "BACKEND_STORAGE_ACCOUNT_NAME.: ${BACKEND_STORAGE_ACCOUNT_NAME?}"
+  echo "BACKEND_CONTAINER_NAME.......: ${BACKEND_CONTAINER_NAME?}"
+  echo "BACKEND_KEY..................: ${BACKEND_KEY?}"
+  echo ""
+
+  mkdir -p environments/${ENVIRONMENT_NAME?}
+
+  envsubst < templates/env.Dockerfile > environments/${ENVIRONMENT_NAME?}/Dockerfile
+  envsubst < templates/env.backend.conf > environments/${ENVIRONMENT_NAME?}/backend.conf
+
+  cp templates/provider.tf environments/${ENVIRONMENT_NAME?}/provider.tf
+  cp templates/build environments/${ENVIRONMENT_NAME?}/build
+
+  cp variables/${ENVIRONMENT_NAME?}.tfvars environments/${ENVIRONMENT_NAME?}/terraform.tfvars
+
+  echo ""
+}
+
+for VARIABLE_ABSOLUT_FILE_NAME in $(find variables/ -type f -name "*.tfvars"); do
+  create_environment ${VARIABLE_ABSOLUT_FILE_NAME?}
+
+  ENVIRONMENT_IMAGE_NAME="${BASE_IMAGE_NAME?}_${ENVIRONMENT_NAME?}"
+  ENVIRONMENT_IMAGE_VERSION="${BASE_IMAGE_NAME?}-${BASE_IMAGE_VERSION?}_env-${ENVIRONMENT_TARGET_IMAGE_VERSION?}"
+
+  echo "ENVIRONMENT_NAME=${ENVIRONMENT_NAME?}" >> ${ENVIRONMENT_CONFIG_FILE?}
+  echo "ENVIRONMENT_IMAGE_NAME=${ENVIRONMENT_IMAGE_NAME?}" >> ${ENVIRONMENT_CONFIG_FILE?}
+  echo "ENVIRONMENT_IMAGE_VERSION=${ENVIRONMENT_IMAGE_VERSION?}" >> ${ENVIRONMENT_CONFIG_FILE?}
+done
+
+[ -e images ] && rm -rf images
+
+for ENVIRONMENT_FOLDER in $(find environments/ -mindepth 1 -maxdepth 1 -type d); do
+  echo "ENVIRONMENT_FOLDER........: ${ENVIRONMENT_FOLDER?}"
+
+  . ${ENVIRONMENT_FOLDER?}/config
+
+  echo "ENVIRONMENT_NAME..........: ${ENVIRONMENT_NAME?}"
+  echo "ENVIRONMENT_IMAGE_NAME....: ${ENVIRONMENT_IMAGE_NAME?}"
+  echo "ENVIRONMENT_IMAGE_VERSION.: ${ENVIRONMENT_IMAGE_VERSION?}"
+  echo ""
+
+  ENVIRONMENT_FINAL_IMAGE_NAME="${ENVIRONMENT_IMAGE_NAME?}:${ENVIRONMENT_IMAGE_VERSION?}"
+
+  docker build \
+    -t ${ENVIRONMENT_FINAL_IMAGE_NAME?} \
+    -f ${ENVIRONMENT_FOLDER?}/Dockerfile ${ENVIRONMENT_FOLDER?}/
+
+  echo "${ENVIRONMENT_FINAL_IMAGE_NAME?}" >> images
+
+  echo ""
+done
+
+cat images

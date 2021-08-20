@@ -1,8 +1,9 @@
 #!/bin/bash
 
-[[ -d ./output ]] && sudo rm -rf output
-
 docker_run() {
+  DOCKER_IMAGE=$1
+  TERRAFORM_COMMAND=$2
+
   docker run \
     -v ${PWD}/output:/stack/output/ \
     -e ARM_CLIENT_ID=${ARM_CLIENT_ID?} \
@@ -10,9 +11,19 @@ docker_run() {
     -e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID?} \
     -e ARM_TENANT_ID=${ARM_TENANT_ID?} \
     -e ARM_ACCESS_KEY=${ARM_ACCESS_KEY?} \
-    iac-stack-stage:1.0.0 $1
+    ${DOCKER_IMAGE?} ${TERRAFORM_COMMAND?}
 }
 
-docker_run plan
+while read IMAGE; do
+  echo ${IMAGE?}
 
-docker_run apply
+  [[ -d ./output ]] && sudo rm -rf output
+
+  docker_run ${IMAGE?} plan
+
+  docker_run ${IMAGE?} apply
+
+  echo ""
+done < images
+
+echo "Done"

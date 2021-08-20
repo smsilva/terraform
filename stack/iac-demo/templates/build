@@ -1,0 +1,5 @@
+#!/bin/bash
+
+. config
+
+docker build -t ${ENVIRONMENT_IMAGE_NAME?}:${ENVIRONMENT_IMAGE_VERSION?} .
