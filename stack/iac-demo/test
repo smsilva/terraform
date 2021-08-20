@@ -1,8 +1,6 @@
 #!/bin/bash
 
 while read IMAGE; do
-  echo ${IMAGE?}
-
   ./azrun ${IMAGE?} plan
 
   ./azrun ${IMAGE?} apply

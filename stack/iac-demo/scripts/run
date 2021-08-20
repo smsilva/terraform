@@ -1,30 +1,32 @@
 #!/bin/sh
 TERRAFORM_COMMAND="${1-plan}"
+TERRAFORM_VERSION=$(terraform --version | head -1 | awk '{ print $2 }')
 TERRAFORM_PLAN_FILE="/stack/output/terraform.plan"
 
-echo ""
+touch file
+cat config backend.conf | tr "[:upper:]" "[:lower:]" | tr -d "\"" | awk -F "=" '{ print $1 "=" $2 }' >> file
+sed -i 's/ //g' file
+cat file | xargs -n 1 -I {} echo "export {}" >> file.sh
+. file.sh
 
-terraform --version
-
+echo "Terraform Environment"
 echo ""
-echo "Environment"
-echo "- user....: $(whoami)"
-echo "- workdir.: $(pwd)"
-echo "- command.: ${TERRAFORM_COMMAND}"
+echo "  name....................: ${environment_name}"
+echo "  command.................: ${TERRAFORM_COMMAND}"
+echo "  version.................: ${TERRAFORM_VERSION}"
 echo ""
-
-echo "Backend Configuration"
 echo ""
-echo "/stack/backend.conf:"
-echo "------------------------------------------------"
-cat /stack/backend.conf
+echo "Backend"
 echo ""
-echo "/stack/config:"
-echo "------------------------------------------------"
-cat /stack/config
+echo "  resource_group..........: ${resource_group_name}"
+echo "  storage_account.........: ${storage_account_name}"
+echo "  container...............: ${container_name}"
+echo "  key.....................: ${key}"
 echo ""
 
 terraform init -reconfigure -upgrade=false -backend-config /stack/backend.conf
+
+echo ""
 
 if [ "${TERRAFORM_COMMAND}" == "apply" ]; then
   terraform apply -auto-approve ${TERRAFORM_PLAN_FILE?}
@@ -38,3 +40,5 @@ fi
 if [ "${TERRAFORM_COMMAND}" == "destroy" ]; then
   terraform destroy -auto-approve
 fi
+
+echo ""
