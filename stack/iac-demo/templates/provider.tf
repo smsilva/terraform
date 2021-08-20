@@ -5,7 +5,7 @@ terraform {
     resource_group_name  = "iac"
     storage_account_name = "silvios"
     container_name       = "terraform"
-    key                  = "iac-demo.terraform.tfstate.json"
+    key                  = "iac-demo-stage.terraform.tfstate.json"
   }
 
   required_providers {

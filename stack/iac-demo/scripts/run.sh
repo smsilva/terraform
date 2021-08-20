@@ -1,1 +1,0 @@
-#!/binb/bash

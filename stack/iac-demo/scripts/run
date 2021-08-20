@@ -1,0 +1,5 @@
+#!/bin/sh
+whoami
+pwd
+terraform -chdir=/src init -reconfigure
+terraform -chdir=/src plan -out /stack/output/terraform.plan
