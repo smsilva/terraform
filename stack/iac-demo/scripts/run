@@ -36,5 +36,5 @@ if [ "${TERRAFORM_COMMAND}" == "plan" ]; then
 fi
 
 if [ "${TERRAFORM_COMMAND}" == "destroy" ]; then
-  terraform plan -out ${TERRAFORM_PLAN_FILE?}
+  terraform destroy -auto-approve
 fi
