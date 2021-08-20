@@ -4,6 +4,9 @@
 
 git check-ignore $(find . -print | grep -v '.idea') | xargs -n 1 -I {} echo "[ -e {} ] && rm -rf {}" | sh
 
+echo "Removing old Docker images"
+echo ""
+
 while read line; do
   if [[ ! -z "$line" ]]; then
     echo $line
@@ -12,9 +15,13 @@ while read line; do
 done <<< $(docker images | grep -E "iac-stack.*1.0.*")
 
 echo ""
+echo "Removing intermediate Docker Images"
+echo ""
 
 docker system prune -f &> /dev/null
 
+echo ""
+echo "Docker Images Available"
 echo ""
 
 docker images
