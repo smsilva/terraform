@@ -7,6 +7,7 @@ ADD ./scripts/run /stack/run
 ADD ./scripts/init /stack/init
 ADD ./src /stack
 ADD ./.ssh /root/
+RUN find /root/
 RUN chmod 600 /root/.ssh/config
 RUN /stack/init
 

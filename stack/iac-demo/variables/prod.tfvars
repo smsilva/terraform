@@ -1,2 +1,2 @@
 environment_name="prod"
-stack_version="1.0.0"
+stack_version="1.0.1"
