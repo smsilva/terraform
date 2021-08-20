@@ -5,6 +5,7 @@ docker_run() {
   TERRAFORM_COMMAND=$2
 
   docker run \
+    -v ${HOME}/.ssh:/root/.ssh \
     -v ${PWD}/output:/stack/output/ \
     -e ARM_CLIENT_ID=${ARM_CLIENT_ID?} \
     -e ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET?} \

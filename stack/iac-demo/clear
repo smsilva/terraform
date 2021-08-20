@@ -2,7 +2,7 @@
 
 [[ -d ./output ]] && sudo rm -rf output
 
-docker images | grep iac-stack | awk '{ print $3 }' | xargs -n 1 docker rmi -f
+docker images | grep -E "iac-stack.*1.0.1" | awk '{ print $3 }' | xargs -n 1 docker rmi -f
 
 docker system prune -f
 

@@ -1,0 +1,6 @@
+#!/bin/sh
+echo ""
+echo "Terraform Initialization using backend local"
+echo ""
+
+terraform init
