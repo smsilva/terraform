@@ -1,28 +1,11 @@
 #!/bin/bash
 
-docker_run() {
-  DOCKER_IMAGE=$1
-  TERRAFORM_COMMAND=$2
-
-  docker run \
-    -v ${HOME}/.ssh:/root/.ssh \
-    -v ${PWD}/output:/stack/output/ \
-    -e ARM_CLIENT_ID=${ARM_CLIENT_ID?} \
-    -e ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET?} \
-    -e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID?} \
-    -e ARM_TENANT_ID=${ARM_TENANT_ID?} \
-    -e ARM_ACCESS_KEY=${ARM_ACCESS_KEY?} \
-    ${DOCKER_IMAGE?} ${TERRAFORM_COMMAND?}
-}
-
 while read IMAGE; do
   echo ${IMAGE?}
 
-  [[ -d ./output ]] && sudo rm -rf output
+  ./azrun ${IMAGE?} plan
 
-  docker_run ${IMAGE?} plan
-
-  docker_run ${IMAGE?} apply
+  ./azrun ${IMAGE?} apply
 
   echo ""
 done < images

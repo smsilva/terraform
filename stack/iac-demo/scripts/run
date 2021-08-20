@@ -29,6 +29,12 @@ terraform init -reconfigure -upgrade=false -backend-config /stack/backend.conf
 if [ "${TERRAFORM_COMMAND}" == "apply" ]; then
   terraform apply -auto-approve ${TERRAFORM_PLAN_FILE?}
   terraform apply -auto-approve -refresh-only
-else
+fi
+
+if [ "${TERRAFORM_COMMAND}" == "plan" ]; then
+  terraform plan -out ${TERRAFORM_PLAN_FILE?}
+fi
+
+if [ "${TERRAFORM_COMMAND}" == "destroy" ]; then
   terraform plan -out ${TERRAFORM_PLAN_FILE?}
 fi

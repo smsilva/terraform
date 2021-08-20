@@ -1,4 +1,6 @@
 FROM hashicorp/terraform:1.0.5 AS base
+
+FROM base AS package
 RUN mkdir -p /stack/output
 WORKDIR /stack
 ADD ./scripts/run /stack/run
@@ -8,9 +10,7 @@ ADD ./.ssh /root/
 RUN chmod 600 /root/.ssh/config
 RUN /stack/init
 
-FROM base AS package
-RUN rm -rf /root/.ssh
-
-FROM package AS final
+FROM base AS final
+COPY --from=package /stack/ /stack/
 WORKDIR /stack
 ENTRYPOINT ["/stack/run"]
