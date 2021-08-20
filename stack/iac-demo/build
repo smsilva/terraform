@@ -85,6 +85,9 @@ for ENVIRONMENT_FOLDER in $(find environments/ -mindepth 1 -maxdepth 1 -type d);
 
   ENVIRONMENT_FINAL_IMAGE_NAME="${ENVIRONMENT_IMAGE_NAME?}:${ENVIRONMENT_IMAGE_VERSION?}"
 
+  echo "Building Stack Image Instance"
+  echo ""
+
   docker build \
     -t ${ENVIRONMENT_FINAL_IMAGE_NAME?} \
     -f ${ENVIRONMENT_FOLDER?}/Dockerfile ${ENVIRONMENT_FOLDER?}/

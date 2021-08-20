@@ -7,5 +7,3 @@ while read IMAGE; do
 
   echo ""
 done < images
-
-echo "Done"
