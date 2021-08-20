@@ -1,1 +1,1 @@
-environment_name="stage1"
+environment_name="stage"

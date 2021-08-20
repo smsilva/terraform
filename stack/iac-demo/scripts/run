@@ -1,5 +1,14 @@
 #!/bin/sh
-whoami
-pwd
-terraform -chdir=/src init -reconfigure
-terraform -chdir=/src plan -out /stack/output/terraform.plan
+TERRAFORM_COMMAND="${1-plan}"
+
+echo "USER=[$(whoami)] WORKDIR=[$(pwd)] COMMAND=[${TERRAFORM_COMMAND}]"
+
+terraform init -reconfigure -upgrade=false
+
+find /stack/
+
+if [ "${TERRAFORM_COMMAND}" == "apply" ]; then
+  terraform apply -auto-approve /stack/output/terraform.plan
+else
+  terraform plan -out /stack/output/terraform.plan
+fi
