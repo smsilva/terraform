@@ -24,9 +24,9 @@ while read -r ABSOLUT_FILE_NAME; do
   loadconfig "${TEMP_FILE?}" > ${CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE}
   source "${CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE}"
 
-  # Set default Backend Variable
+  # Set default Backend Variables
   export BACKEND_KEY="${ENVIRONMENT_NAME?}"
-  export BACKEND_RESOURCE_GROUP_NAME="iac"
+#  export BACKEND_RESOURCE_GROUP_NAME="iac"
   export BACKEND_STORAGE_ACCOUNT_NAME="silvios"
   export BACKEND_CONTAINER_NAME="terraform"
 

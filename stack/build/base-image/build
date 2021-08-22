@@ -1,11 +1,10 @@
 #!/bin/bash
-
-SOURCE_DIRECTORY="$1"
+SOURCE_DIRECTORY="${1-../../src}"
 BUILD_CONFIGURATION_FILE="src/stack.conf"
 
 rm -rf src/
 mkdir src/
-cp -R "${SOURCE_DIRECTORY?}/" "."
+cp -R "${SOURCE_DIRECTORY?}" "."
 
 if [ ! -e ${BUILD_CONFIGURATION_FILE?} ]; then
   echo "File not found: build.conf. Did you download build scripts into Stack Source Code directory?"
@@ -18,13 +17,14 @@ source "${BUILD_CONFIGURATION_FILE?}"
 echo ""
 echo "Stack Build Settings"
 echo ""
-echo "  name...................: ${STACK_NAME}"
-echo "  version................: ${STACK_VERSION}"
-echo "  terraform_version......: ${TERRAFORM_VERSION}"
+echo "  name...................: ${STACK_NAME?}"
+echo "  version................: ${STACK_VERSION?}"
+echo "  terraform_version......: ${TERRAFORM_VERSION?}"
+echo "  source.................: ${SOURCE_DIRECTORY?}"
 echo ""
 
 # Generate Dockerfile
-export TERRAFORM_VERSION=${TERRAFORM_VERSION}
+export TERRAFORM_VERSION=${TERRAFORM_VERSION?}
 envsubst < templates/Dockerfile > Dockerfile
 
 # Copy ssh_key to access Git Repository
