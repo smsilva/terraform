@@ -33,7 +33,7 @@ docker run \
   -e ARM_TENANT_ID=${ARM_TENANT_ID?} \
   -e ARM_ACCESS_KEY=${ARM_ACCESS_KEY?} \
   -e ENVIRONMENT_REGION="eastus2" \
-  iac-stack-demo:1.4.0-sandbox plan
+  iac-stack-demo:1.4.1-sandbox plan
 
 docker run \
   -v ${HOME}/.ssh:/root/.ssh \
@@ -44,6 +44,6 @@ docker run \
   -e ARM_TENANT_ID=${ARM_TENANT_ID?} \
   -e ARM_ACCESS_KEY=${ARM_ACCESS_KEY?} \
   -e ENVIRONMENT_REGION="eastus2" \
-  iac-stack-demo:1.4.0-sandbox apply
+  iac-stack-demo:1.4.1-sandbox apply
 
 ```

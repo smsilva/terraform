@@ -9,10 +9,6 @@ sed -i '/backend.*local/ s/local/azurerm/'  /stack/provider.tf
 # Load Stack Settings
 . /stack/stack.conf
 
-export BACKEND_KEY="${ENVIRONMENT_NAME?}"
-
-TERRAFORM_STATE_FILE="${STACK_NAME?}-${BACKEND_KEY}.tfstate.json"
-
 cat <<EOF > terraform.auto.tfvars
 environment_name="${ENVIRONMENT_NAME}"
 EOF
@@ -30,13 +26,16 @@ if [ ! -z "${ENVIRONMENT_REGION}" ]; then
 echo "  environment_region.....: ${ENVIRONMENT_REGION}"
 fi
 
+while read -r LINE; do
+  export "${LINE}"
+done < /stack/backend.conf
+
 echo ""
 echo "Backend configuration"
 echo ""
-echo "  storage_account_name...: ${BACKEND_STORAGE_ACCOUNT_NAME}"
-echo "  container_name.........: ${BACKEND_CONTAINER_NAME}"
-echo "  key....................: ${BACKEND_KEY?}"
-echo "  state_file.............: ${TERRAFORM_STATE_FILE?}"
+echo "  storage_account_name...: ${storage_account_name}"
+echo "  container_name.........: ${container_name}"
+echo "  key....................: ${key?}"
 echo ""
 
 terraform init \
