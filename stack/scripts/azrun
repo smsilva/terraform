@@ -1,7 +1,9 @@
 #!/bin/bash
 COMMAND="$@"
 
-echo "${COMMAND?}"
+if [ "${DEBUG-0}" != "0" ]; then
+  echo "${COMMAND?}"
+fi
 
 docker run \
   -v ${PWD}/output:/stack/output/ \
@@ -10,5 +12,6 @@ docker run \
   -e ARM_SUBSCRIPTION_ID="${ARM_SUBSCRIPTION_ID?}" \
   -e ARM_TENANT_ID="${ARM_TENANT_ID?}" \
   -e ARM_ACCESS_KEY="${ARM_ACCESS_KEY?}" \
+  -e DEBUG="${DEBUG}" \
   -e ENVIRONMENT_REGION="centralus" \
   ${COMMAND?}

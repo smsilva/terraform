@@ -3,8 +3,6 @@ TERRAFORM_COMMAND="$@"
 TERRAFORM_VERSION=$(terraform --version | head -1 | awk '{ print $2 }')
 TERRAFORM_PLAN_FILE="/stack/output/terraform.plan"
 
-echo "Command: [$@]"
-
 # Configure Backend to Azure Resource Manager
 sed -i '/backend.*local/ s/local/azurerm/' /stack/provider.tf
 
@@ -15,37 +13,50 @@ cat <<EOF > terraform.auto.tfvars
 environment_name="${ENVIRONMENT_NAME}"
 EOF
 
-echo ""
-echo "Stack configuration"
-echo ""
-echo "  name...................: ${STACK_NAME}"
-echo "  version................: ${STACK_VERSION}"
-echo "  terraform_version......: ${TERRAFORM_VERSION}"
-echo "  environment_name.......: ${ENVIRONMENT_NAME}"
-
 if [ -n "${ENVIRONMENT_REGION}" ]; then
   echo "region=\"${ENVIRONMENT_REGION}\"" >> terraform.auto.tfvars
-echo "  environment_region.....: ${ENVIRONMENT_REGION}"
+fi
+
+if [ "${DEBUG-0}" != "0" ]; then
+  echo ""
+  echo "Stack configuration"
+  echo ""
+  echo "  name...................: ${STACK_NAME}"
+  echo "  version................: ${STACK_VERSION}"
+  echo "  terraform_version......: ${TERRAFORM_VERSION}"
+  echo "  environment_name.......: ${ENVIRONMENT_NAME}"
+
+  if [ -n "${ENVIRONMENT_REGION}" ]; then
+    echo "  environment_region.....: ${ENVIRONMENT_REGION}"
+  fi
 fi
 
 while read -r LINE; do
   export "${LINE}"
 done < /stack/backend.conf
 
-echo ""
-echo "Backend configuration"
-echo ""
-echo "  storage_account_name...: ${storage_account_name}"
-echo "  container_name.........: ${container_name}"
-echo "  key....................: ${key?}"
-echo ""
+if [ "${DEBUG-0}" != "0" ]; then
+  echo ""
+  echo "Backend configuration"
+  echo ""
+  echo "  storage_account_name...: ${storage_account_name}"
+  echo "  container_name.........: ${container_name}"
+  echo "  key....................: ${key?}"
+  echo ""
 
-terraform init \
-  -reconfigure \
-  -upgrade=false \
-  -backend-config=backend.conf
+  terraform init \
+    -reconfigure \
+    -upgrade=false \
+    -backend-config=backend.conf
 
-echo ""
+  echo ""
+else
+  terraform init \
+    -reconfigure \
+    -upgrade=false \
+    -no-color \
+    -backend-config=backend.conf > /stack/output/init.tf
+fi
 
 if [ "${TERRAFORM_COMMAND}" == "plan" ] || [ -z "${TERRAFORM_COMMAND}" ]; then
   terraform plan \
@@ -66,5 +77,4 @@ if [ "${TERRAFORM_COMMAND}" == "apply" ]; then
   exit 0
 fi
 
-echo "terraform_command_output_from_here"
 terraform "$@"
