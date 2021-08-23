@@ -1,22 +1,16 @@
 #!/bin/bash
 export PATH=../scripts/:${PATH}
 
-TARGET_DIRECTORY="images"
+TARGET_DIRECTORY="$1"
 TEMP_FILE="${HOME}/.stack/tempfile"
 
 mkdir -p "$(dirname "${TEMP_FILE?}")"
-
-if [ -e "${TARGET_DIRECTORY?}" ]; then
-  sudo rm -rf ${TARGET_DIRECTORY?}
-else
-  mkdir -p ${TARGET_DIRECTORY?}
-fi
 
 while read -r ABSOLUT_FILE_NAME; do
   FILE_NAME=$(basename "${ABSOLUT_FILE_NAME?}")
   CUSTOM_IMAGE_NAME="${FILE_NAME%.tfvars}"
   CUSTOM_IMAGE_DIRECTORY="${TARGET_DIRECTORY?}/${CUSTOM_IMAGE_NAME?}"
-  CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE="${CUSTOM_IMAGE_DIRECTORY?}/flavor.conf"
+  CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE="${CUSTOM_IMAGE_DIRECTORY?}/build.conf"
   mkdir -p ${CUSTOM_IMAGE_DIRECTORY}
 
   # Copy tfvars file
@@ -27,14 +21,15 @@ while read -r ABSOLUT_FILE_NAME; do
   loadconfig "${TEMP_FILE?}" > ${CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE}
   source "${CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE}"
 
-  # Set Backend Configuration
+  # Evaluate Backend Configuration Template
   export BACKEND_KEY="${ENVIRONMENT_NAME?}"
   export BACKEND_STORAGE_ACCOUNT_NAME="silvios"
   export BACKEND_CONTAINER_NAME="terraform"
   envsubst < templates/backend.conf > "${CUSTOM_IMAGE_DIRECTORY?}/backend.conf"
 
-  # Evaluate Dockerfile template
+  # Evaluate Dockerfile Template
   envsubst < templates/Dockerfile > "${CUSTOM_IMAGE_DIRECTORY?}/Dockerfile"
 
+  # Log
   echo "${CUSTOM_IMAGE_DIRECTORY?} [image: ${STACK_IMAGE?}:${STACK_VERSION?}]"
 done <<< "$(find flavors/ -type f -name "*.tfvars")"

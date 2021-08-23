@@ -1,7 +1,15 @@
 #!/bin/bash
 
-TARGET_DIRECTORY="images"
+TARGET_DIRECTORY=".images"
+
+if [ -e "${TARGET_DIRECTORY?}" ]; then
+  sudo rm -rf ${TARGET_DIRECTORY?}
+else
+  mkdir -p ${TARGET_DIRECTORY?}
+fi
 
 ./configure-build-folders ${TARGET_DIRECTORY?}
 
 ./build-images ${TARGET_DIRECTORY?}
+
+rm -rf ${TARGET_DIRECTORY}

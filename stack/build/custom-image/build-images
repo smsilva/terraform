@@ -3,7 +3,7 @@
 TARGET_DIRECTORY="$1"
 
 while read -r DIRECTORY; do
-  source "${DIRECTORY}/flavor.conf"
+  source "${DIRECTORY}/build.conf"
 
   docker build \
     -t ${STACK_IMAGE?}:${STACK_VERSION?}-${ENVIRONMENT_NAME?} \

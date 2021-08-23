@@ -25,25 +25,21 @@ cd ../../build/custom-image/
 ### Execute a Custom Image Test
 ```bash
 docker run \
-  -v ${HOME}/.ssh:/root/.ssh \
   -v ${PWD}/output:/stack/output/ \
   -e ARM_CLIENT_ID=${ARM_CLIENT_ID?} \
   -e ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET?} \
   -e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID?} \
   -e ARM_TENANT_ID=${ARM_TENANT_ID?} \
   -e ARM_ACCESS_KEY=${ARM_ACCESS_KEY?} \
-  -e ENVIRONMENT_REGION="eastus2" \
   iac-stack-demo:1.4.1-sandbox plan
 
 docker run \
-  -v ${HOME}/.ssh:/root/.ssh \
   -v ${PWD}/output:/stack/output/ \
   -e ARM_CLIENT_ID=${ARM_CLIENT_ID?} \
   -e ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET?} \
   -e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID?} \
   -e ARM_TENANT_ID=${ARM_TENANT_ID?} \
   -e ARM_ACCESS_KEY=${ARM_ACCESS_KEY?} \
-  -e ENVIRONMENT_REGION="eastus2" \
   iac-stack-demo:1.4.1-sandbox apply
 
 ```
