@@ -24,22 +24,9 @@ cd ../../build/custom-image/
 
 ### Execute a Custom Image Test
 ```bash
-docker run \
-  -v ${PWD}/output:/stack/output/ \
-  -e ARM_CLIENT_ID=${ARM_CLIENT_ID?} \
-  -e ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET?} \
-  -e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID?} \
-  -e ARM_TENANT_ID=${ARM_TENANT_ID?} \
-  -e ARM_ACCESS_KEY=${ARM_ACCESS_KEY?} \
-  iac-stack-demo:1.4.1-sandbox plan
+export PATH=${PWD}/stack/scripts:${PATH}
 
-docker run \
-  -v ${PWD}/output:/stack/output/ \
-  -e ARM_CLIENT_ID=${ARM_CLIENT_ID?} \
-  -e ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET?} \
-  -e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID?} \
-  -e ARM_TENANT_ID=${ARM_TENANT_ID?} \
-  -e ARM_ACCESS_KEY=${ARM_ACCESS_KEY?} \
-  iac-stack-demo:1.4.1-sandbox apply
-
+azrun iac-stack-demo:1.5.0-sandbox plan
+azrun iac-stack-demo:1.5.0-sandbox apply
+azrun iac-stack-demo:1.5.0-sandbox state list
 ```
