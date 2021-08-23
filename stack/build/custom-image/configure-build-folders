@@ -19,22 +19,22 @@ while read -r ABSOLUT_FILE_NAME; do
   CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE="${CUSTOM_IMAGE_DIRECTORY?}/flavor.conf"
   mkdir -p ${CUSTOM_IMAGE_DIRECTORY}
 
-  # Retrieve some variables from tfvar file and export each one as an Environment Variable
+  # Copy tfvars file
+  cp ${ABSOLUT_FILE_NAME?} "${CUSTOM_IMAGE_DIRECTORY?}/terraform.tfvars"
+
+  # Retrieve some variables from tfvars file and export each one as an Environment Variable
   grep -E "^environment_name|^stack_image|^stack_version" ${ABSOLUT_FILE_NAME?} > "${TEMP_FILE?}"
   loadconfig "${TEMP_FILE?}" > ${CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE}
   source "${CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE}"
 
-  # Set default Backend Variables
+  # Set Backend Configuration
   export BACKEND_KEY="${ENVIRONMENT_NAME?}"
-#  export BACKEND_RESOURCE_GROUP_NAME="iac"
   export BACKEND_STORAGE_ACCOUNT_NAME="silvios"
   export BACKEND_CONTAINER_NAME="terraform"
+  envsubst < templates/backend.conf > "${CUSTOM_IMAGE_DIRECTORY?}/backend.conf"
 
   # Evaluate Dockerfile template
   envsubst < templates/Dockerfile > "${CUSTOM_IMAGE_DIRECTORY?}/Dockerfile"
-
-  # Copy tfvar file
-  cp ${ABSOLUT_FILE_NAME?} "${CUSTOM_IMAGE_DIRECTORY?}/terraform.tfvars"
 
   echo "${CUSTOM_IMAGE_DIRECTORY?} [image: ${STACK_IMAGE?}:${STACK_VERSION?}]"
 done <<< "$(find flavors/ -type f -name "*.tfvars")"

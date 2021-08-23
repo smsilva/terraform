@@ -1,3 +1,3 @@
 environment_name="sandbox"
 stack_image="iac-stack-demo"
-stack_version="1.2.0"
+stack_version="1.4.0"
