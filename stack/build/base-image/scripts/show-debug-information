@@ -6,6 +6,7 @@ if [ "${DEBUG-0}" != "0" ]; then
   echo "  name...................: ${STACK_NAME}"
   echo "  version................: ${STACK_VERSION}"
   echo "  terraform_version......: ${TERRAFORM_VERSION}"
+  echo "  terraform_lock_timeout.: ${LOCK_TIMEOUT_SECONDS}"
 
   if [ -n "${ENVIRONMENT_NAME}" ]; then
     echo "  environment_name.......: ${ENVIRONMENT_NAME}"

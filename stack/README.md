@@ -9,30 +9,35 @@ export ARM_CLIENT_SECRET=YOUR_CLIENT_ID_SECRET
 export ARM_ACCESS_KEY=YOUR_AZURE_STORAGE_ACCOUNT_PRIMARY_ACCESS_KEY
 ```
 
+### Clone this Repository into your Linux Home Folder
+```bash
+git clone https://github.com/smsilva/terraform.git ${HOME}/git/terraform
+```
+
 ### Build Base Image
 ```bash
-cd build/base-image
-./build ../../src
+cd ${HOME}/git/terraform/stack/build/base-image
 
+./build ../../src
 ```
 
 ### Build Custom Image
 ```bash
-cd ../custom-image/
+cd ${HOME}/git/terraform/stack/build/custom-image/
+
 ./build
 ```
 
 ### Execute a Custom Image Test
 ```bash
-# Use DEBUG=1 to enable debug 
-export DEBUG=1
 export PATH=${HOME}/git/terraform/stack/scripts:${PATH}
 
+# Use DEBUG=1 to enable debug 
+export DEBUG=1
 azrun iac-stack-demo:1.5.0-sandbox plan
 azrun iac-stack-demo:1.5.0-sandbox apply
 
 export DEBUG=0
 azrun iac-stack-demo:1.5.0-sandbox state list
 azrun iac-stack-demo:1.5.0-sandbox output
-
 ```

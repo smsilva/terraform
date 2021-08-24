@@ -1,4 +1,5 @@
 FROM hashicorp/terraform:${TERRAFORM_VERSION} AS terraform_base_image
+ENV LOCK_TIMEOUT_SECONDS=300
 RUN mkdir -p /opt/output/
 
 FROM terraform_base_image AS package
