@@ -14,4 +14,4 @@ docker run \
   -e ARM_ACCESS_KEY="${ARM_ACCESS_KEY?}" \
   -e DEBUG="${DEBUG}" \
   -e ENVIRONMENT_REGION="centralus" \
-  "${COMMAND?}"
+  ${COMMAND?}

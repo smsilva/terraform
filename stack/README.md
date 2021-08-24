@@ -11,14 +11,14 @@ export ARM_ACCESS_KEY=YOUR_AZURE_STORAGE_ACCOUNT_PRIMARY_ACCESS_KEY
 
 ### Build Base Image
 ```bash
-cd stack/build/base-image
+cd build/base-image
 ./build ../../src
 
 ```
 
 ### Build Custom Image
 ```bash
-cd ../../build/custom-image/
+cd ../custom-image/
 ./build
 ```
 
@@ -30,5 +30,9 @@ export PATH=${HOME}/git/terraform/stack/scripts:${PATH}
 
 azrun iac-stack-demo:1.5.0-sandbox plan
 azrun iac-stack-demo:1.5.0-sandbox apply
+
+export DEBUG=0
 azrun iac-stack-demo:1.5.0-sandbox state list
+azrun iac-stack-demo:1.5.0-sandbox output
+
 ```
