@@ -10,5 +10,5 @@ fi
 while read -r LINE; do
   KEY_NAME=$(echo ${LINE} | awk -F "=" '{ print $1 }' | tr "[:lower:]" "[:upper:]")
   KEY_VALUE=$(echo ${LINE} | awk -F "=" '{ print $2 }')
-  echo "export ${KEY_NAME}=${KEY_VALUE}" >> /stack/env.conf
+  echo "export ${KEY_NAME}=${KEY_VALUE}" >> /stack/environment-variables.conf
 done < "${CONFIGURATION_FILE?}"

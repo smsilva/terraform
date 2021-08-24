@@ -1,30 +1,25 @@
 #!/bin/sh
 export TERRAFORM_COMMAND="$@"
 export TERRAFORM_PLAN_FILE="/stack/output/terraform.plan"
+export PATH=/stack:${PATH}
 
-/stack/loadconfig /stack/stack.conf
-/stack/loadconfig /stack/backend.conf
-. /stack/env.conf
-/stack/create-auto-tfvars-file
-/stack/show-debug-information
+loadconfig /stack/stack.conf
+loadconfig /stack/backend.conf
+
+# Export Loaded Parameters as Environment Variables
+. /stack/environment-variables.conf
+
+create-auto-tfvars-file
+
+show-debug-information
 
 if [ "${TERRAFORM_COMMAND}" == "plan" ] || [ -z "${TERRAFORM_COMMAND}" ]; then
-  terraform plan \
-    -lock-timeout=300s \
-    -out ${TERRAFORM_PLAN_FILE?}
-
+  plan
   exit 0
 fi
 
 if [ "${TERRAFORM_COMMAND}" == "apply" ]; then
-  terraform apply \
-    -lock-timeout=300s \
-    -auto-approve ${TERRAFORM_PLAN_FILE?}
-
-  terraform apply \
-     -auto-approve \
-     -refresh-only
-
+  apply
   exit 0
 fi
 

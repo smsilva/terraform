@@ -1,0 +1,5 @@
+#!/bin/sh
+
+terraform plan \
+  -lock-timeout=300s \
+  -out "${TERRAFORM_PLAN_FILE?}"
