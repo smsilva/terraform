@@ -13,3 +13,6 @@ fi
 ./build-images ${TARGET_DIRECTORY?}
 
 rm -rf ${TARGET_DIRECTORY}
+
+docker system prune -f > /dev/null
+docker images

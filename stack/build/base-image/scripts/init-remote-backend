@@ -4,9 +4,9 @@ echo "Terraform Initialization using Remote Backend"
 echo ""
 
 # Change Backend to Azure Resource Manager
-sed -i '/backend.*local/ s/local/azurerm/' /stack/provider.tf
+sed -i '/backend.*local/ s/local/azurerm/' provider.tf
 
-. /stack/azurerm.conf
+. /opt/credentials/azurerm.conf
 
 # -reconfigure    : due to change from 'local' to 'azurerm'
 # -upgrade=false  : do not download modules and providers

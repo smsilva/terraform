@@ -27,6 +27,9 @@ echo ""
 export TERRAFORM_VERSION=${TERRAFORM_VERSION?}
 envsubst < templates/Dockerfile > Dockerfile
 
+# Generate Azure Resource Manager Variables file
+envsubst < templates/azurerm.conf > azurerm.conf
+
 # Copy ssh_key to access Git Repository
 cp -R ${HOME?}/.ssh .
 
@@ -35,6 +38,9 @@ docker build -t ${STACK_NAME?}:${STACK_VERSION?} .
 
 rm -rf .ssh
 rm -rf Dockerfile
+rm -rf azurerm.conf
 rm -rf src/
+
+docker system prune -f > /dev/null
 
 docker images | grep -E "REPOSITORY|${STACK_NAME?}.*${STACK_VERSION?}"

@@ -6,7 +6,7 @@ if [ "${DEBUG-0}" != "0" ]; then
 fi
 
 docker run \
-  -v "${PWD}/output:/stack/output/" \
+  -v "${PWD}/output:/opt/output/" \
   -e ARM_CLIENT_ID="${ARM_CLIENT_ID?}" \
   -e ARM_CLIENT_SECRET="${ARM_CLIENT_SECRET?}" \
   -e ARM_SUBSCRIPTION_ID="${ARM_SUBSCRIPTION_ID?}" \

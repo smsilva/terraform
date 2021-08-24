@@ -1,15 +1,17 @@
-FROM hashicorp/terraform:${TERRAFORM_VERSION} AS base
+FROM hashicorp/terraform:${TERRAFORM_VERSION} AS terraform_base_image
+RUN mkdir -p /opt/output/
 
-FROM base AS package
-RUN mkdir -p /stack/output
-WORKDIR /stack
-COPY scripts/* /stack/
-ADD src/ /stack
+FROM terraform_base_image AS package
+ADD azurerm.conf /opt/credentials/azurerm.conf
 ADD .ssh/ /root/.ssh/
 RUN chmod 600 /root/.ssh/config
-RUN /stack/init-local-backend
+COPY scripts/* /opt/scripts/
+ADD src/ /opt/src
+WORKDIR /opt/src
+RUN /opt/scripts/init-remote-backend
 
-FROM base AS final
-COPY --from=package /stack /stack/
-WORKDIR /stack
-ENTRYPOINT ["/stack/run"]
+FROM terraform_base_image AS final
+COPY --from=package /opt/src /opt/src
+COPY --from=package /opt/scripts/ /opt/scripts/
+WORKDIR /opt/src
+ENTRYPOINT ["/opt/scripts/run"]

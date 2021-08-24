@@ -1,13 +1,13 @@
 #!/bin/sh
 export TERRAFORM_COMMAND="$@"
-export TERRAFORM_PLAN_FILE="/stack/output/terraform.plan"
-export PATH=/stack:${PATH}
+export TERRAFORM_PLAN_FILE="/opt/output/terraform.plan"
+export PATH=/opt/scripts/:${PATH}
 
-loadconfig /stack/stack.conf
-loadconfig /stack/backend.conf
+loadconfig stack.conf
+loadconfig backend.conf
 
 # Export Loaded Parameters as Environment Variables
-. /stack/environment-variables.conf
+. /opt/environment-variables.conf
 
 create-auto-tfvars-file
 
