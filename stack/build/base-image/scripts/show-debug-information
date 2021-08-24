@@ -15,8 +15,8 @@ if [ "${DEBUG-0}" != "0" ]; then
   echo ""
   echo "Backend configuration"
   echo ""
-  echo "  storage_account_name...: ${storage_account_name}"
-  echo "  container_name.........: ${container_name}"
-  echo "  key....................: ${key?}"
+  echo "  storage_account_name...: ${STORAGE_ACCOUNT_NAME}"
+  echo "  container_name.........: ${CONTAINER_NAME}"
+  echo "  key....................: ${KEY?}"
   echo ""
 fi

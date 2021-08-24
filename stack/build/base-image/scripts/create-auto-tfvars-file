@@ -1,0 +1,8 @@
+#!/bin/sh
+cat <<EOF > terraform.auto.tfvars
+environment_name="${ENVIRONMENT_NAME}"
+EOF
+
+if [ -n "${ENVIRONMENT_REGION}" ]; then
+  echo "region=\"${ENVIRONMENT_REGION}\"" >> terraform.auto.tfvars
+fi
