@@ -1,0 +1,22 @@
+#!/bin/sh
+if [ "${DEBUG-0}" != "0" ]; then
+  echo ""
+  echo "Stack configuration"
+  echo ""
+  echo "  name...................: ${STACK_NAME}"
+  echo "  version................: ${STACK_VERSION}"
+  echo "  terraform_version......: ${TERRAFORM_VERSION}"
+  echo "  environment_name.......: ${ENVIRONMENT_NAME}"
+
+  if [ -n "${ENVIRONMENT_REGION}" ]; then
+    echo "  environment_region.....: ${ENVIRONMENT_REGION}"
+  fi
+
+  echo ""
+  echo "Backend configuration"
+  echo ""
+  echo "  storage_account_name...: ${storage_account_name}"
+  echo "  container_name.........: ${container_name}"
+  echo "  key....................: ${key?}"
+  echo ""
+fi

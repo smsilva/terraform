@@ -1,10 +1,19 @@
 #!/bin/sh
-TERRAFORM_COMMAND="$@"
-TERRAFORM_VERSION=$(terraform --version | head -1 | awk '{ print $2 }')
-TERRAFORM_PLAN_FILE="/stack/output/terraform.plan"
+export TERRAFORM_COMMAND="$@"
+export TERRAFORM_VERSION=$(terraform --version | head -1 | awk '{ print $2 }')
+export TERRAFORM_PLAN_FILE="/stack/output/terraform.plan"
 
 # Load Stack Settings
-. /stack/stack.conf
+while read -r LINE; do
+  export "${LINE}"
+done < /stack/stack.conf
+
+# Load Backend Settings
+while read -r LINE; do
+  export "${LINE}"
+done < /stack/backend.conf
+
+/stack/show-debug-information
 
 cat <<EOF > terraform.auto.tfvars
 environment_name="${ENVIRONMENT_NAME}"
@@ -12,34 +21,6 @@ EOF
 
 if [ -n "${ENVIRONMENT_REGION}" ]; then
   echo "region=\"${ENVIRONMENT_REGION}\"" >> terraform.auto.tfvars
-fi
-
-if [ "${DEBUG-0}" != "0" ]; then
-  echo ""
-  echo "Stack configuration"
-  echo ""
-  echo "  name...................: ${STACK_NAME}"
-  echo "  version................: ${STACK_VERSION}"
-  echo "  terraform_version......: ${TERRAFORM_VERSION}"
-  echo "  environment_name.......: ${ENVIRONMENT_NAME}"
-
-  if [ -n "${ENVIRONMENT_REGION}" ]; then
-    echo "  environment_region.....: ${ENVIRONMENT_REGION}"
-  fi
-fi
-
-while read -r LINE; do
-  export "${LINE}"
-done < /stack/backend.conf
-
-if [ "${DEBUG-0}" != "0" ]; then
-  echo ""
-  echo "Backend configuration"
-  echo ""
-  echo "  storage_account_name...: ${storage_account_name}"
-  echo "  container_name.........: ${container_name}"
-  echo "  key....................: ${key?}"
-  echo ""
 fi
 
 if [ "${TERRAFORM_COMMAND}" == "plan" ] || [ -z "${TERRAFORM_COMMAND}" ]; then
@@ -52,6 +33,7 @@ fi
 
 if [ "${TERRAFORM_COMMAND}" == "apply" ]; then
   terraform apply \
+    -lock-timeout=300s \
     -auto-approve ${TERRAFORM_PLAN_FILE?}
 
   terraform apply \
