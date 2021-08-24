@@ -3,9 +3,6 @@ TERRAFORM_COMMAND="$@"
 TERRAFORM_VERSION=$(terraform --version | head -1 | awk '{ print $2 }')
 TERRAFORM_PLAN_FILE="/stack/output/terraform.plan"
 
-# Configure Backend to Azure Resource Manager
-sed -i '/backend.*local/ s/local/azurerm/' /stack/provider.tf
-
 # Load Stack Settings
 . /stack/stack.conf
 
@@ -43,19 +40,6 @@ if [ "${DEBUG-0}" != "0" ]; then
   echo "  container_name.........: ${container_name}"
   echo "  key....................: ${key?}"
   echo ""
-
-  terraform init \
-    -reconfigure \
-    -upgrade=false \
-    -backend-config=backend.conf
-
-  echo ""
-else
-  terraform init \
-    -reconfigure \
-    -upgrade=false \
-    -no-color \
-    -backend-config=backend.conf > /stack/output/init.tf
 fi
 
 if [ "${TERRAFORM_COMMAND}" == "plan" ] || [ -z "${TERRAFORM_COMMAND}" ]; then

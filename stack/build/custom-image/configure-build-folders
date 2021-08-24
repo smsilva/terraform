@@ -30,6 +30,9 @@ while read -r ABSOLUT_FILE_NAME; do
   # Evaluate Dockerfile Template
   envsubst < templates/Dockerfile > "${CUSTOM_IMAGE_DIRECTORY?}/Dockerfile"
 
+  # Generate Azure Resource Manager Variables file
+  envsubst < templates/azurerm.conf > "${CUSTOM_IMAGE_DIRECTORY?}/azurerm.conf"
+
   # Log
   echo "${CUSTOM_IMAGE_DIRECTORY?} [image: ${STACK_IMAGE?}:${STACK_VERSION?}]"
 done <<< "$(find flavors/ -type f -name "*.tfvars")"

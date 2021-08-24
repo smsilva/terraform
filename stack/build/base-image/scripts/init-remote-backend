@@ -1,0 +1,20 @@
+#!/bin/sh
+echo ""
+echo "Terraform Initialization using Remote Backend"
+echo ""
+
+# Change Backend to Azure Resource Manager
+sed -i '/backend.*local/ s/local/azurerm/' /stack/provider.tf
+
+. /stack/azurerm.conf
+
+# -reconfigure    : due to change from 'local' to 'azurerm'
+# -upgrade=false  : do not download modules and providers
+# -backend-config : pass backend parameters:
+#                     - storage account name
+#                     - container name
+#                     - key (tfstate file name)
+terraform init \
+  -reconfigure \
+  -upgrade=false \
+  -backend-config=backend.conf

@@ -25,8 +25,8 @@ cd ../../build/custom-image/
 ### Execute a Custom Image Test
 ```bash
 # Use DEBUG=1 to enable debug 
-export DEBUG=0
-export PATH=${PWD}/stack/scripts:${PATH}
+export DEBUG=1
+export PATH=${HOME}/git/terraform/stack/scripts:${PATH}
 
 azrun iac-stack-demo:1.5.0-sandbox plan
 azrun iac-stack-demo:1.5.0-sandbox apply

@@ -33,4 +33,8 @@ cp -R ${HOME?}/.ssh .
 # Build Docker Image
 docker build -t ${STACK_NAME?}:${STACK_VERSION} .
 
+rm -rf .ssh
+rm -rf Dockerfile
 rm -rf src/
+docker system prune -f
+docker images | grep -E "REPOSITORY|${STACK_NAME?}:${STACK_VERSION}"
