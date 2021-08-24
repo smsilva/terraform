@@ -1,15 +1,23 @@
 variable "environment_name" {
-  default = "sandbox"
+  description = "Environment Name that will be used to generate the Resource Names"
+  type        = string
+  default     = ""
 }
 
 variable "region" {
-  default = "centralus"
+  description = "Azure Region in which the Resources will live on"
+  type        = string
+  default     = "centralus"
 }
 
 variable "stack_image" {
-  default = "iac-stack-demo"
+  description = "The Stack Base Image"
+  type        = string
+  default     = "iac-stack-demo"
 }
 
 variable "stack_version" {
-  default = "latest"
+  description = "The Stack Version which will be used as a Base Image for Instances Creation"
+  type        = string
+  default     = ""
 }

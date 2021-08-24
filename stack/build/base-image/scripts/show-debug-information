@@ -6,7 +6,10 @@ if [ "${DEBUG-0}" != "0" ]; then
   echo "  name...................: ${STACK_NAME}"
   echo "  version................: ${STACK_VERSION}"
   echo "  terraform_version......: ${TERRAFORM_VERSION}"
-  echo "  environment_name.......: ${ENVIRONMENT_NAME}"
+
+  if [ -n "${ENVIRONMENT_NAME}" ]; then
+    echo "  environment_name.......: ${ENVIRONMENT_NAME}"
+  fi
 
   if [ -n "${ENVIRONMENT_REGION}" ]; then
     echo "  environment_region.....: ${ENVIRONMENT_REGION}"
