@@ -1,7 +1,8 @@
 #!/bin/bash
 export PATH=../scripts/:${PATH}
 
-TARGET_DIRECTORY="$1"
+VARIABLES_DIRECTORY="$1"
+TARGET_DIRECTORY="$2"
 TEMP_FILE="${HOME?}/.stack/env_var_temp.conf"
 
 sudo rm -rf "${TARGET_DIRECTORY?}"
@@ -40,4 +41,4 @@ while read -r TFVARS_ABSOLUT_FILE_NAME; do
 
   # Log
   echo "${CUSTOM_IMAGE_DIRECTORY?} [image: ${STACK_IMAGE?}:${STACK_VERSION?}]"
-done <<< "$(find variables/ -type f -name "*.tfvars")"
+done <<< "$(find "${VARIABLES_DIRECTORY?}" -type f -name "*.tfvars")"

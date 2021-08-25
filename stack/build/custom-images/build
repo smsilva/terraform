@@ -1,7 +1,8 @@
 #!/bin/bash
 
+VARIABLES_DIRECTORY="${1-./variables}"
 TARGET_DIRECTORY=".images"
 
-./build-step-1-create-local-temporary-folders ${TARGET_DIRECTORY?}
-./build-step-2-build-local-docker-images ${TARGET_DIRECTORY?}
-./build-step-3-clear-temporary-folders ${TARGET_DIRECTORY?}
+./build-step-1-create-local-temporary-folders "${VARIABLES_DIRECTORY?}" "${TARGET_DIRECTORY?}"
+./build-step-2-build-local-docker-images "${TARGET_DIRECTORY?}"
+./build-step-3-clear-temporary-folders "${TARGET_DIRECTORY?}"

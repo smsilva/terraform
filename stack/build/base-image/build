@@ -1,26 +1,37 @@
 #!/bin/bash
 SOURCE_DIRECTORY="${1-../../src}"
+PROVIDER_FILE="${SOURCE_DIRECTORY}/provider.tf"
 BUILD_CONFIGURATION_FILE="src/stack.conf"
 
-rm -rf src/
-mkdir src/
-cp -R "${SOURCE_DIRECTORY?}" "."
+if [ ! -e "${SOURCE_DIRECTORY?}" ]; then
+  echo "Source Code Directory doesn't exists: ${SOURCE_DIRECTORY}"
+  exit 1
+fi
 
-if [ ! -e ${BUILD_CONFIGURATION_FILE?} ]; then
-  echo "File not found: build.conf. Did you download build scripts into Stack Source Code directory?"
+if [ ! -e "${PROVIDER_FILE?}" ]; then
+  echo "Provider file doesn't exists: ${PROVIDER_FILE?}"
+  exit 1
+fi
+
+echo ""
+echo "Stack Build Settings"
+echo ""
+echo "  source_code_directory..: ${SOURCE_DIRECTORY}"
+
+rm -rf src/
+cp -R "${SOURCE_DIRECTORY?}" "src"
+
+if [ ! -e "${BUILD_CONFIGURATION_FILE?}" ]; then
+  echo "File not found: ${BUILD_CONFIGURATION_FILE?}. Did you download build scripts into Stack Source Code directory?"
   exit 1
 fi
 
 # Read Stack Build Configuration
 source "${BUILD_CONFIGURATION_FILE?}"
 
-echo ""
-echo "Stack Build Settings"
-echo ""
 echo "  name...................: ${STACK_NAME?}"
 echo "  version................: ${STACK_VERSION?}"
 echo "  terraform_version......: ${TERRAFORM_VERSION?}"
-echo "  source.................: ${SOURCE_DIRECTORY?}"
 echo ""
 
 # Generate Dockerfile
