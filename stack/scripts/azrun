@@ -7,7 +7,9 @@ fi
 
 LOCAL_TERRAFORM_OUTPUT_DIRECTORY="${PWD}/output"
 
+# Generate empty folder and files to prevent creation as root user
 mkdir -p "${LOCAL_TERRAFORM_OUTPUT_DIRECTORY}"
+touch "${LOCAL_TERRAFORM_OUTPUT_DIRECTORY}/terraform.plan"
 
 docker run \
   -v "${LOCAL_TERRAFORM_OUTPUT_DIRECTORY}:/opt/output/" \
