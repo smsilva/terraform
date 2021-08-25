@@ -5,8 +5,12 @@ if [ "${DEBUG-0}" != "0" ]; then
   echo "${COMMAND?}"
 fi
 
+LOCAL_TERRAFORM_OUTPUT_DIRECTORY="${PWD}/output"
+
+mkdir -p "${LOCAL_TERRAFORM_OUTPUT_DIRECTORY}"
+
 docker run \
-  -v "${PWD}/output:/opt/output/" \
+  -v "${LOCAL_TERRAFORM_OUTPUT_DIRECTORY}:/opt/output/" \
   -e ARM_CLIENT_ID="${ARM_CLIENT_ID?}" \
   -e ARM_CLIENT_SECRET="${ARM_CLIENT_SECRET?}" \
   -e ARM_SUBSCRIPTION_ID="${ARM_SUBSCRIPTION_ID?}" \

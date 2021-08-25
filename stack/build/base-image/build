@@ -36,11 +36,11 @@ cp -R ${HOME?}/.ssh .
 # Build Docker Image
 docker build -t ${STACK_NAME?}:${STACK_VERSION?} .
 
+# Clear File System
 rm -rf .ssh
 rm -rf Dockerfile
 rm -rf azurerm.conf
 rm -rf src/
 
 docker system prune -f > /dev/null
-
 docker images | grep -E "REPOSITORY|${STACK_NAME?}.*${STACK_VERSION?}"
