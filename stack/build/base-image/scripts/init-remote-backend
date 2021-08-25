@@ -8,11 +8,11 @@ sed -i '/backend.*local/ s/local/azurerm/' provider.tf
 
 . /opt/credentials/azurerm.conf
 
-# -reconfigure    : due to change from 'local' to 'azurerm'
-# -upgrade=false  : do not download modules and providers
-# -backend-config : pass backend parameters:
-#                     - storage account name
-#                     - container name
+# -reconfigure    : due to change from 'local' to 'azurerm', reconfigure backend preventing migration of any existing state
+# -upgrade=false  : do not download modules and plugins (this options is already false by default)
+# -backend-config : pass backend partial config:
+#                     - storage account name (an ARM_ACCESS_KEY Environment Variable needs to be set to access this)
+#                     - container name (default is 'terraform' but can be any name)
 #                     - key (tfstate file name)
 terraform init \
   -reconfigure \

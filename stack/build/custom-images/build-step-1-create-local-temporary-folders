@@ -2,23 +2,28 @@
 export PATH=../scripts/:${PATH}
 
 TARGET_DIRECTORY="$1"
-TEMP_FILE="${HOME}/.stack/tempfile"
+TEMP_FILE="${HOME?}/.stack/env_var_temp.conf"
 
-mkdir -p "$(dirname "${TEMP_FILE?}")"
+sudo rm -rf "${TARGET_DIRECTORY?}"
+mkdir -p "${TARGET_DIRECTORY?}"
 
-while read -r ABSOLUT_FILE_NAME; do
-  FILE_NAME=$(basename "${ABSOLUT_FILE_NAME?}")
-  CUSTOM_IMAGE_NAME="${FILE_NAME%.tfvars}"
+custom_image_name() {
+  FILE_NAME=$(basename "$1")
+  echo "${FILE_NAME%.tfvars}"
+}
+
+while read -r TFVARS_ABSOLUT_FILE_NAME; do
+  CUSTOM_IMAGE_NAME=$(custom_image_name "${TFVARS_ABSOLUT_FILE_NAME?}")
   CUSTOM_IMAGE_DIRECTORY="${TARGET_DIRECTORY?}/${CUSTOM_IMAGE_NAME?}"
   CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE="${CUSTOM_IMAGE_DIRECTORY?}/build.conf"
-  mkdir -p ${CUSTOM_IMAGE_DIRECTORY}
+  mkdir -p "${CUSTOM_IMAGE_DIRECTORY}"
 
   # Copy tfvars file
-  cp ${ABSOLUT_FILE_NAME?} "${CUSTOM_IMAGE_DIRECTORY?}/terraform.tfvars"
+  cp "${TFVARS_ABSOLUT_FILE_NAME?}" "${CUSTOM_IMAGE_DIRECTORY?}/terraform.tfvars"
 
   # Retrieve some variables from tfvars file and export each one as an Environment Variable
-  grep -E "^environment_name|^stack_image|^stack_version" ${ABSOLUT_FILE_NAME?} > "${TEMP_FILE?}"
-  loadconfig "${TEMP_FILE?}" > ${CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE}
+  grep -E "^environment_name|^stack_image|^stack_version" "${TFVARS_ABSOLUT_FILE_NAME?}" > "${TEMP_FILE?}"
+  loadconfig "${TEMP_FILE?}" > "${CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE}"
   source "${CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE}"
 
   # Evaluate Backend Configuration Template
@@ -35,4 +40,4 @@ while read -r ABSOLUT_FILE_NAME; do
 
   # Log
   echo "${CUSTOM_IMAGE_DIRECTORY?} [image: ${STACK_IMAGE?}:${STACK_VERSION?}]"
-done <<< "$(find flavors/ -type f -name "*.tfvars")"
+done <<< "$(find variables/ -type f -name "*.tfvars")"

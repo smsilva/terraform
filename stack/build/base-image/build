@@ -30,8 +30,8 @@ envsubst < templates/Dockerfile > Dockerfile
 # Generate Azure Resource Manager Variables file
 envsubst < templates/azurerm.conf > azurerm.conf
 
-# Copy ssh_key to access Git Repository
-cp -R ${HOME?}/.ssh .
+# Copy ssh_key to access Git Repository and download Modules if needed
+cp -R "${HOME?}/.ssh" .
 
 # Build Docker Image
 docker build -t ${STACK_NAME?}:${STACK_VERSION?} .
@@ -42,5 +42,6 @@ rm -rf Dockerfile
 rm -rf azurerm.conf
 rm -rf src/
 
+# Clear Intermediate Docker Images
 docker system prune -f > /dev/null
 docker images | grep -E "REPOSITORY|${STACK_NAME?}.*${STACK_VERSION?}"

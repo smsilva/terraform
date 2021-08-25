@@ -15,4 +15,4 @@ FROM terraform_base_image AS final
 COPY --from=package /opt/src /opt/src
 COPY --from=package /opt/scripts/ /opt/scripts/
 WORKDIR /opt/src
-ENTRYPOINT ["/opt/scripts/run"]
+ENTRYPOINT ["/opt/scripts/entrypoint"]

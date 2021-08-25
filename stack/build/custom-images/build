@@ -1,0 +1,7 @@
+#!/bin/bash
+
+TARGET_DIRECTORY=".images"
+
+./build-step-1-create-local-temporary-folders ${TARGET_DIRECTORY?}
+./build-step-2-build-local-docker-images ${TARGET_DIRECTORY?}
+./build-step-3-clear-temporary-folders ${TARGET_DIRECTORY?}

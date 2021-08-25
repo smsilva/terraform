@@ -2,14 +2,13 @@
 
 CONFIGURATION_FILE="$1"
 
-if [ ! -e ${CONFIGURATION_FILE?} ]; then
+if [ ! -e "${CONFIGURATION_FILE?}" ]; then
   echo "File not found: ${CONFIGURATION_FILE?}."
   exit 1
 fi
 
 while read -r LINE; do
-  KEY_NAME=$(awk -F "=" '{ print $1 }'<<< ${LINE?})
-  KEY_VALUE=$(awk -F "=" '{ print $2 }'<<< ${LINE})
-
+  KEY_NAME=$(awk -F "=" '{ print $1 }' <<< "${LINE?}")
+  KEY_VALUE=$(awk -F "=" '{ print $2 }' <<< "${LINE}")
   echo "export ${KEY_NAME^^}=${KEY_VALUE}"
 done < "${CONFIGURATION_FILE?}"

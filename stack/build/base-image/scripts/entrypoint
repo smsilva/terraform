@@ -14,12 +14,12 @@ create-auto-tfvars-file
 show-debug-information
 
 if [ "${TERRAFORM_COMMAND}" == "plan" ] || [ -z "${TERRAFORM_COMMAND}" ]; then
-  plan
+  terraform_plan-with-output-file
   exit 0
 fi
 
 if [ "${TERRAFORM_COMMAND}" == "apply" ]; then
-  apply
+  terraform_apply-plan-with-auto-approve
   exit 0
 fi
 
