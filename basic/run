@@ -2,27 +2,25 @@
 
 mkdir -p .terraform
 
-docker run \
-  -u $(id -u):$(id -g) \
-  -v "${PWD}/.terraform":/terraform/.terraform/ \
-  -v "${PWD}":/terraform \
-  -w /terraform \
-  hashicorp/terraform:1.0.5 init
+docker_run() {
+  COMMAND="$@"
 
-docker run \
-  -u $(id -u):$(id -g) \
-  -v "${PWD}/.terraform":/terraform/.terraform/ \
-  -v "${PWD}":/terraform \
-  -w /terraform \
-  hashicorp/terraform:1.0.5 plan -out /terraform/.terraform/terraform.plan
+  docker run \
+    -u $(id -u):$(id -g) \
+    -v "${PWD}/.terraform":/terraform/.terraform/ \
+    -v "${PWD}":/terraform \
+    -w /terraform \
+    hashicorp/terraform:1.0.5 ${COMMAND?}
+}
 
-docker run \
-  -u $(id -u):$(id -g) \
-  -v "${PWD}/.terraform":/terraform/.terraform/ \
-  -v "${PWD}":/terraform \
-  -w /terraform \
-  hashicorp/terraform:1.0.5 apply -auto-approve /terraform/.terraform/terraform.plan
+TERRAFORM_PLAN_FILE="/terraform/.terraform/terraform.plan"
+
+docker_run init
+
+docker_run plan -out "${TERRAFORM_PLAN_FILE}"
+
+docker_run apply -auto-approve "${TERRAFORM_PLAN_FILE}"
 
 ls -lha
 
-find
+find .
