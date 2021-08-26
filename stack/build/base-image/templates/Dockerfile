@@ -4,6 +4,7 @@ RUN mkdir -p /opt/output/
 
 FROM terraform_base_image AS package
 ADD azurerm.conf /opt/credentials/azurerm.conf
+ADD stack.conf /opt/src/stack.conf
 ADD .ssh/ /root/.ssh/
 RUN chmod 600 /root/.ssh/config
 COPY scripts/* /opt/scripts/

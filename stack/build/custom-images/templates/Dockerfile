@@ -1,4 +1,4 @@
-FROM ${STACK_IMAGE}:${STACK_VERSION} AS stack_base_image
+FROM ${STACK_NAME}:${STACK_VERSION} AS stack_base_image
 
 FROM stack_base_image AS package
 ADD terraform.tfvars /opt/src/terraform.tfvars

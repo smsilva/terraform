@@ -6,7 +6,7 @@ while read -r DIRECTORY; do
   source "${DIRECTORY}/build.conf"
 
   docker build \
-    -t ${STACK_IMAGE?}:${STACK_VERSION?}-${ENVIRONMENT_NAME?} \
+    -t ${STACK_NAME?}:${STACK_VERSION?}-${ENVIRONMENT_NAME?} \
     -f ${DIRECTORY?}/Dockerfile ${DIRECTORY?}/
 
 done <<< "$(find "${TARGET_DIRECTORY}" -mindepth 1 -maxdepth 1 -type d)"

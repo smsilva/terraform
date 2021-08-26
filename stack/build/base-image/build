@@ -1,7 +1,9 @@
 #!/bin/bash
+set -e
+
 SOURCE_DIRECTORY="${1-../../src}"
 PROVIDER_FILE="${SOURCE_DIRECTORY}/provider.tf"
-BUILD_CONFIGURATION_FILE="src/stack.conf"
+BUILD_CONFIGURATION_FILE="src/build.conf"
 
 if [ ! -e "${SOURCE_DIRECTORY?}" ]; then
   echo "Source Code Directory doesn't exists: ${SOURCE_DIRECTORY}"
@@ -29,13 +31,20 @@ fi
 # Read Stack Build Configuration
 source "${BUILD_CONFIGURATION_FILE?}"
 
+# Read Stack Base Variables (STACK_NAME, STACK_VERSION, ENVIRONMENT_NAME and REGION)
+. ../scripts/loadconfig src/terraform.tfvars
+
+export TERRAFORM_VERSION=${TERRAFORM_VERSION?}
+
 echo "  name...................: ${STACK_NAME?}"
 echo "  version................: ${STACK_VERSION?}"
 echo "  terraform_version......: ${TERRAFORM_VERSION?}"
 echo ""
 
+# Generate stack.conf file
+envsubst < templates/stack.conf > stack.conf
+
 # Generate Dockerfile
-export TERRAFORM_VERSION=${TERRAFORM_VERSION?}
 envsubst < templates/Dockerfile > Dockerfile
 
 # Generate Azure Resource Manager Variables file
@@ -51,6 +60,7 @@ docker build -t ${STACK_NAME?}:${STACK_VERSION?} .
 rm -rf .ssh
 rm -rf Dockerfile
 rm -rf azurerm.conf
+rm -rf stack.conf
 rm -rf src/
 
 # Clear Intermediate Docker Images

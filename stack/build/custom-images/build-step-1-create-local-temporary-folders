@@ -23,22 +23,22 @@ while read -r TFVARS_ABSOLUT_FILE_NAME; do
   cp "${TFVARS_ABSOLUT_FILE_NAME?}" "${CUSTOM_IMAGE_DIRECTORY?}/terraform.tfvars"
 
   # Retrieve some variables from tfvars file and export each one as an Environment Variable
-  grep -E "^environment_name|^stack_image|^stack_version" "${TFVARS_ABSOLUT_FILE_NAME?}" > "${TEMP_FILE?}"
+  grep -E "^environment_name|^stack_name|^stack_version" "${TFVARS_ABSOLUT_FILE_NAME?}" > "${TEMP_FILE?}"
   loadconfig "${TEMP_FILE?}" > "${CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE}"
   source "${CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE}"
 
   # Evaluate Backend Configuration Template
   export BACKEND_KEY="${ENVIRONMENT_NAME?}"
-  export BACKEND_STORAGE_ACCOUNT_NAME="silvios"
-  export BACKEND_CONTAINER_NAME="terraform"
+  export BACKEND_STORAGE_ACCOUNT_NAME="${ARM_STORAGE_ACCOUNT_NAME?}"
+  export BACKEND_CONTAINER_NAME="${BACKEND_CONTAINER_NAME-terraform}"
   envsubst < templates/backend.conf > "${CUSTOM_IMAGE_DIRECTORY?}/backend.conf"
 
   # Evaluate Dockerfile Template
   envsubst < templates/Dockerfile > "${CUSTOM_IMAGE_DIRECTORY?}/Dockerfile"
 
-  # Generate Azure Resource Manager Variables file
+  # Evaluate Azure Resource Manager Template
   envsubst < templates/azurerm.conf > "${CUSTOM_IMAGE_DIRECTORY?}/azurerm.conf"
 
   # Log
-  echo "${CUSTOM_IMAGE_DIRECTORY?} [image: ${STACK_IMAGE?}:${STACK_VERSION?}]"
+  echo "${CUSTOM_IMAGE_DIRECTORY?} [image: ${STACK_NAME?}:${STACK_VERSION?}]"
 done <<< "$(find "${VARIABLES_DIRECTORY?}" -type f -name "*.tfvars")"
