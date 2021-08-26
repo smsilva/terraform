@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 VARIABLES_DIRECTORY="${1-./variables}"
 TARGET_DIRECTORY=".images"
 

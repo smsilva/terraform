@@ -1,4 +1,4 @@
 stack_name="iac-stack"
-stack_version="1.0.0"
+stack_version="1.3.0"
 environment_name="default"
 region="centralus"

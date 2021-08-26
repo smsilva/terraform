@@ -24,7 +24,7 @@ while read -r TFVARS_ABSOLUT_FILE_NAME; do
 
   # Retrieve some variables from tfvars file and export each one as an Environment Variable
   grep -E "^environment_name|^stack_name|^stack_version" "${TFVARS_ABSOLUT_FILE_NAME?}" > "${TEMP_FILE?}"
-  loadconfig "${TEMP_FILE?}" > "${CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE}"
+  . loadconfig "${TEMP_FILE?}" > "${CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE}"
   source "${CUSTOM_IMAGE_ENVIRONMENT_VARIABLE_FILE}"
 
   # Evaluate Backend Configuration Template
