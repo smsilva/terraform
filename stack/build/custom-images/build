@@ -2,7 +2,7 @@
 
 set -e
 
-VARIABLES_DIRECTORY="${1-./variables}"
+VARIABLES_DIRECTORY="${1-../variables}"
 TARGET_DIRECTORY=".images"
 
 ./build-step-1-create-local-temporary-folders "${VARIABLES_DIRECTORY?}" "${TARGET_DIRECTORY?}"

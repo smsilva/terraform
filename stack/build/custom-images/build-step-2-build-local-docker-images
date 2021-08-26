@@ -2,12 +2,6 @@
 
 TARGET_DIRECTORY="$1"
 
-echo "$0"
-echo "pwd"
-pwd
-
-echo""
-
 while read -r DIRECTORY; do
   source "${DIRECTORY}/build.conf"
 

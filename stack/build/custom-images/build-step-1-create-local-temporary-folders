@@ -25,10 +25,6 @@ while read -r TFVARS_ABSOLUT_FILE_NAME; do
     mv terraform-variables.conf "${CUSTOM_IMAGE_DIRECTORY?}/build.conf" && \
     source "${CUSTOM_IMAGE_DIRECTORY?}/build.conf"
 
-  echo "STACK_NAME.........: ${STACK_NAME}"
-  echo "STACK_VERSION......: ${STACK_VERSION}"
-  echo "ENVIRONMENT_NAME...: ${ENVIRONMENT_NAME}"
-
   # Evaluate Backend Configuration Template
   export BACKEND_KEY="${ENVIRONMENT_NAME?}"
   export BACKEND_STORAGE_ACCOUNT_NAME="${ARM_STORAGE_ACCOUNT_NAME?}"
