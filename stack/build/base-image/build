@@ -1,8 +1,11 @@
 #!/bin/bash
 set -e
 
+export PATH=${PWD}/../scripts/:${PATH}
+
 SOURCE_DIRECTORY="${1-../../src}"
 PROVIDER_FILE="${SOURCE_DIRECTORY}/provider.tf"
+TERRAFORM_VARIABLES_FILE="${SOURCE_DIRECTORY}/terraform.tfvars"
 BUILD_CONFIGURATION_FILE="src/build.conf"
 
 if [ ! -e "${SOURCE_DIRECTORY?}" ]; then
@@ -16,7 +19,7 @@ if [ ! -e "${PROVIDER_FILE?}" ]; then
 fi
 
 echo ""
-echo "Stack Build Settings"
+echo "Stack Base Image Build Settings"
 echo ""
 echo "  source_code_directory..: ${SOURCE_DIRECTORY}"
 
@@ -31,15 +34,15 @@ fi
 # Read Stack Build Configuration
 source "${BUILD_CONFIGURATION_FILE?}"
 
-# Read Stack Base Variables (STACK_NAME, STACK_VERSION, ENVIRONMENT_NAME and REGION)
-. ../scripts/loadconfig src/terraform.tfvars
+# Retrieve some variables from tfvars file and export each one as an Environment Variable
+generate-terraform-variables-conf-from "${TERRAFORM_VARIABLES_FILE?}" && \
+  source terraform-variables.conf
 
 export TERRAFORM_VERSION=${TERRAFORM_VERSION?}
 
 echo "  name...................: ${STACK_NAME?}"
 echo "  version................: ${STACK_VERSION?}"
 echo "  terraform_version......: ${TERRAFORM_VERSION?}"
-echo ""
 
 # Generate stack.conf file
 envsubst < templates/stack.conf > stack.conf
@@ -65,6 +68,7 @@ rm -rf .ssh
 rm -rf Dockerfile
 rm -rf azurerm.conf
 rm -rf stack.conf
+rm -rf terraform-variables.conf
 rm -rf src/
 
 # Clear Intermediate Docker Images
