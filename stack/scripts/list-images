@@ -1,4 +1,4 @@
 #!/bin/bash
-FILTER_EXPRESSION="${1-iac-stack-demo}"
+FILTER_EXPRESSION="${1-iac-stack}"
 
 docker images | grep -E "^${FILTER_EXPRESSION}" | awk '{ print $1 ":" $2 }' | sort

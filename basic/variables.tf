@@ -7,13 +7,13 @@ variable "environment_name" {
 variable "region" {
   description = "Azure Region in which the Resources will live on"
   type        = string
-  default     = "centralus"
+  default     = ""
 }
 
 variable "stack_image" {
   description = "The Stack Base Image"
   type        = string
-  default     = "basic"
+  default     = ""
 }
 
 variable "stack_version" {

@@ -53,8 +53,12 @@ envsubst < templates/azurerm.conf > azurerm.conf
 # Copy ssh_key to access Git Repository and download Modules if needed
 cp -R "${HOME?}/.ssh" .
 
+echo ""
+
 # Build Docker Image
 docker build -t ${STACK_NAME?}:${STACK_VERSION?} .
+
+echo ""
 
 # Clear File System
 rm -rf .ssh

@@ -13,6 +13,7 @@ WORKDIR /opt/src
 RUN /opt/scripts/init-remote-backend
 
 FROM terraform_base_image AS final
+ENV DEBUG="1"
 COPY --from=package /opt/src /opt/src
 COPY --from=package /opt/scripts/ /opt/scripts/
 WORKDIR /opt/src

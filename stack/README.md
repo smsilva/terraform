@@ -33,12 +33,23 @@ cd ${HOME}/git/terraform/stack/build/custom-image/
 ```bash
 export PATH=${HOME}/git/terraform/stack/scripts:${PATH}
 
-# Use DEBUG=1 to enable debug 
+# Use DEBUG=1 to enable debug
 export DEBUG=1
-azrun iac-stack-demo:1.5.0-sandbox plan
-azrun iac-stack-demo:1.5.0-sandbox apply
 
+# Running Base Image
+azrun iac-stack:1.0.0 plan
+azrun iac-stack:1.0.0 apply
+
+# Use DEBUG=0 to disable debug to retrieve only the outputs
 export DEBUG=0
-azrun iac-stack-demo:1.5.0-sandbox state list
-azrun iac-stack-demo:1.5.0-sandbox output
+azrun iac-stack:1.0.0 output
+azrun iac-stack:1.0.0 state list
+
+# Customizing Environment Variables
+export ENVIRONMENT_NAME="xpto"
+export ENVIRONMENT_REGION="eastus2"
+
+azrun iac-stack:1.0.0 plan
+azrun iac-stack:1.0.0 apply
+azrun iac-stack:1.0.0 show -json
 ```
