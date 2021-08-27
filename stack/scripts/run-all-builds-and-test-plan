@@ -17,8 +17,6 @@ echo ""
 
 docker images | grep -E "REPOSITORY|iac-stack-demo|hashicorp\/terraform"
 
-echo ""
-
 ORIGIN_PATH=${PWD}
 
 cd ../build/base-image/ && ./build && echo ""

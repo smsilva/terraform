@@ -12,16 +12,16 @@ custom_image_name() {
   echo "${FILE_NAME%.tfvars}"
 }
 
-while read -r TFVARS_ABSOLUT_FILE_NAME; do
-  CUSTOM_IMAGE_NAME=$(custom_image_name "${TFVARS_ABSOLUT_FILE_NAME?}")
+while read -r TFVARS_FILE_NAME; do
+  CUSTOM_IMAGE_NAME=$(custom_image_name "${TFVARS_FILE_NAME?}")
   CUSTOM_IMAGE_DIRECTORY="${TARGET_DIRECTORY?}/${CUSTOM_IMAGE_NAME?}"
   mkdir -p "${CUSTOM_IMAGE_DIRECTORY}"
 
   # Copy tfvars file
-  cp "${TFVARS_ABSOLUT_FILE_NAME?}" "${CUSTOM_IMAGE_DIRECTORY?}/terraform.tfvars"
+  cp "${TFVARS_FILE_NAME?}" "${CUSTOM_IMAGE_DIRECTORY?}/terraform.tfvars"
 
   # Retrieve some variables from tfvars file and export each one as Environment Variables
-  generate-terraform-variables-conf-from "${TFVARS_ABSOLUT_FILE_NAME?}" && \
+  generate-terraform-variables-conf-from "${TFVARS_FILE_NAME?}" && \
     mv terraform-variables.conf "${CUSTOM_IMAGE_DIRECTORY?}/build.conf" && \
     source "${CUSTOM_IMAGE_DIRECTORY?}/build.conf"
 
