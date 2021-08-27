@@ -20,7 +20,7 @@ while read -r TFVARS_ABSOLUT_FILE_NAME; do
   # Copy tfvars file
   cp "${TFVARS_ABSOLUT_FILE_NAME?}" "${CUSTOM_IMAGE_DIRECTORY?}/terraform.tfvars"
 
-  # Retrieve some variables from tfvars file and export each one as an Environment Variable
+  # Retrieve some variables from tfvars file and export each one as Environment Variables
   generate-terraform-variables-conf-from "${TFVARS_ABSOLUT_FILE_NAME?}" && \
     mv terraform-variables.conf "${CUSTOM_IMAGE_DIRECTORY?}/build.conf" && \
     source "${CUSTOM_IMAGE_DIRECTORY?}/build.conf"
@@ -38,5 +38,7 @@ while read -r TFVARS_ABSOLUT_FILE_NAME; do
   envsubst < templates/azurerm.conf > "${CUSTOM_IMAGE_DIRECTORY?}/azurerm.conf"
 
   # Log
-  echo "${CUSTOM_IMAGE_DIRECTORY?} [image: ${STACK_NAME?}:${STACK_VERSION?}]"
+  echo "[image: ${STACK_NAME?}:${STACK_VERSION?}] ${CUSTOM_IMAGE_DIRECTORY?} created."
 done <<< "$(find "${VARIABLES_DIRECTORY?}" -type f -name "*.tfvars")"
+
+echo ""

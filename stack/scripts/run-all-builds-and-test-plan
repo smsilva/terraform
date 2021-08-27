@@ -2,14 +2,22 @@
 
 set -e
 
+DOCKER_IMAGE_FILTER_EXPRESSION="${1-iac-stack.*}"
+
+# Remove Local Docker Images
 while read -r DOCKER_IMAGE_ID; do
   if [ -n "${DOCKER_IMAGE_ID}" ]; then
     docker rmi -f "${DOCKER_IMAGE_ID?}" > /dev/null
   fi
-done <<< "$(docker images | sed 1d | grep "iac-stack.*sandbox" | awk '{ print $3 }')"
+done <<< "$(docker images | sed 1d | grep "${DOCKER_IMAGE_FILTER_EXPRESSION}" | awk '{ print $3 }')"
 
 docker system prune -f > /dev/null
+
+echo ""
+
 docker images | grep -E "REPOSITORY|iac-stack-demo|hashicorp\/terraform"
+
+echo ""
 
 ORIGIN_PATH=${PWD}
 
@@ -21,8 +29,10 @@ cd ../build/custom-images/ && ./build && echo ""
 
 cd "${ORIGIN_PATH?}" || exit 1
 
+# Enable Debug Info
 export DEBUG=1
 
+# Execute Terraform Plan for each Base and Custom Images available
 while read -r DOCKER_IMAGE; do
   ./azrun ${DOCKER_IMAGE?} plan
   rm -rf output

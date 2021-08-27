@@ -4,4 +4,7 @@ TARGET_DIRECTORY="$1"
 rm -rf "${TARGET_DIRECTORY?}"
 
 docker system prune -f > /dev/null
+
+echo ""
+
 docker images
