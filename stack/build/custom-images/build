@@ -5,6 +5,6 @@ set -e
 VARIABLES_DIRECTORY="${1-./variables}"
 TARGET_DIRECTORY=".images"
 
-./build-step-1-create-local-temporary-folders "${VARIABLES_DIRECTORY?}" "${TARGET_DIRECTORY?}"
-./build-step-2-build-local-docker-images "${TARGET_DIRECTORY?}"
-./build-step-3-clear-temporary-folders "${TARGET_DIRECTORY?}"
+./step-1-create-temporary-folders-from-tfvars-file-list "${VARIABLES_DIRECTORY?}" "${TARGET_DIRECTORY?}"
+./step-2-build-local-docker-images "${TARGET_DIRECTORY?}"
+./step-3-delete-temporary-folders "${TARGET_DIRECTORY?}"
