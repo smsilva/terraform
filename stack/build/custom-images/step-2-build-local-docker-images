@@ -1,12 +1,18 @@
 #!/bin/bash
 
 TARGET_DIRECTORY="$1"
+IMAGE_BUILD_ID="$2"
+
+if [ -z "${IMAGE_BUILD_ID}" ]; then
+  IMAGE_BUILD_ID=$(git rev-parse --short HEAD)
+fi
 
 while read -r DIRECTORY; do
   source "${DIRECTORY}/build.conf"
 
   docker build \
-    -t ${STACK_NAME?}/${ENVIRONMENT_NAME?}:${STACK_VERSION?} \
+    --no-cache \
+    -t ${STACK_NAME?}/${ENVIRONMENT_NAME?}:${STACK_VERSION?}-${IMAGE_BUILD_ID?} \
     -f ${DIRECTORY?}/Dockerfile ${DIRECTORY?}/
 
 done <<< "$(find "${TARGET_DIRECTORY}" -mindepth 1 -maxdepth 1 -type d)"
