@@ -6,6 +6,7 @@ echo ""
 # Change Backend to Azure Resource Manager
 sed -i '/backend.*local/ s/local/azurerm/' provider.tf
 
+# Load Azure Credentials
 . /opt/credentials/azurerm.conf
 
 # -reconfigure    : due to change from 'local' to 'azurerm', reconfigure backend preventing migration of any existing state

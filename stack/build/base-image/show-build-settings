@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+
+echo ""
+echo "Stack Base Image Build Settings"
+echo ""
+echo "  source_code_directory..: ${SOURCE_DIRECTORY}"
+echo "  name...................: ${STACK_NAME?}"
+echo "  version................: ${STACK_VERSION?}"
+echo "  terraform_version......: ${TERRAFORM_VERSION?}"

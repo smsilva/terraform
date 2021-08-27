@@ -2,47 +2,29 @@
 set -e
 
 export PATH=${PWD}/../scripts/:${PATH}
+export SOURCE_DIRECTORY="${1-../../src}"
+export PROVIDER_FILE="${SOURCE_DIRECTORY}/provider.tf"
+export TERRAFORM_VARIABLES_FILE="${SOURCE_DIRECTORY}/terraform.tfvars"
+export BUILD_CONFIGURATION_FILE="${SOURCE_DIRECTORY}/build.conf"
 
-SOURCE_DIRECTORY="${1-../../src}"
-PROVIDER_FILE="${SOURCE_DIRECTORY}/provider.tf"
-TERRAFORM_VARIABLES_FILE="${SOURCE_DIRECTORY}/terraform.tfvars"
-BUILD_CONFIGURATION_FILE="src/build.conf"
+# Execute validations on input parameters
+./validate-input-parameters
 
-if [ ! -e "${SOURCE_DIRECTORY?}" ]; then
-  echo "Source Code Directory doesn't exists: ${SOURCE_DIRECTORY}"
-  exit 1
-fi
-
-if [ ! -e "${PROVIDER_FILE?}" ]; then
-  echo "Provider file doesn't exists: ${PROVIDER_FILE?}"
-  exit 1
-fi
-
-echo ""
-echo "Stack Base Image Build Settings"
-echo ""
-echo "  source_code_directory..: ${SOURCE_DIRECTORY}"
-
-rm -rf src/
-cp -R "${SOURCE_DIRECTORY?}" "src"
-
-if [ ! -e "${BUILD_CONFIGURATION_FILE?}" ]; then
-  echo "File not found: ${BUILD_CONFIGURATION_FILE?}. Did you download build scripts into Stack Source Code directory?"
-  exit 1
-fi
+# Copy the entire Source Code Directory to a src local folder
+./copy-source-code-from "${SOURCE_DIRECTORY?}"
 
 # Read Stack Build Configuration
 source "${BUILD_CONFIGURATION_FILE?}"
+
+# Export Terraform Version to be used with Templates
+export TERRAFORM_VERSION=${TERRAFORM_VERSION?}
 
 # Retrieve some variables from tfvars file and export each one as an Environment Variable
 generate-terraform-variables-conf-from "${TERRAFORM_VARIABLES_FILE?}" && \
   source terraform-variables.conf
 
-export TERRAFORM_VERSION=${TERRAFORM_VERSION?}
-
-echo "  name...................: ${STACK_NAME?}"
-echo "  version................: ${STACK_VERSION?}"
-echo "  terraform_version......: ${TERRAFORM_VERSION?}"
+# Show Loaded Build Settings
+./show-build-settings
 
 # Generate stack.conf file
 envsubst < templates/stack.conf > stack.conf
@@ -54,14 +36,10 @@ envsubst < templates/Dockerfile > Dockerfile
 envsubst < templates/azurerm.conf > azurerm.conf
 
 # Copy ssh_key to access Git Repository and download Modules if needed
-cp -R "${HOME?}/.ssh" .
-
-echo ""
+cp -R "${HOME?}/.ssh" . && echo ""
 
 # Build Docker Image
-docker build -t ${STACK_NAME?}:${STACK_VERSION?} .
-
-echo ""
+docker build -t ${STACK_NAME?}:${STACK_VERSION?} . && echo ""
 
 # Clear File System
 rm -rf .ssh
@@ -73,4 +51,6 @@ rm -rf src/
 
 # Clear Intermediate Docker Images
 docker system prune -f > /dev/null
+
+# List Created Image
 docker images | grep -E "REPOSITORY|${STACK_NAME?}.*${STACK_VERSION?}"
