@@ -5,10 +5,10 @@ variable "region" {
 
 variable "resource_group_name" {
   type = string
-  default = "iac-temp"
+  default = "silvios-demo"
 }
 
 variable "storage_account_name" {
   type = string
-  default = "silviosiac"
+  default = "silviosdemo"
 }
