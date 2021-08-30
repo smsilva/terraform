@@ -1,9 +1,0 @@
-#!/bin/bash
-
-INPUT_FILE="$1"
-
-while read -r LINE; do
-  KEY_NAME=$(awk -F "=" '{ print $1 }' <<< "${LINE?}")
-  KEY_VALUE=$(awk -F "=" '{ print $2 }' <<< "${LINE}" | tr -d '"')
-  echo "${KEY_NAME^^}=${KEY_VALUE}"
-done < "${INPUT_FILE?}"

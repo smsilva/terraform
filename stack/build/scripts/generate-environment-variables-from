@@ -1,0 +1,14 @@
+#!/bin/bash
+
+TFVAR_FILE="$1"
+
+while read -r LINE; do
+  KEY_NAME=$(awk -F "=" '{ print $1 }' <<< "${LINE?}" | tr -d " ")
+  KEY_VALUE=$(awk -F "=" '{ print $2 }' <<< "${LINE}" | tr -d '"')
+
+  KEY_NAME_IN_UPPERCASE="${KEY_NAME^^}"
+  KEY_VALUE_WITHOUT_INITIAL_BLANK_SPACES="${KEY_VALUE##* }"
+
+  echo "export ${KEY_NAME_IN_UPPERCASE}=${KEY_VALUE_WITHOUT_INITIAL_BLANK_SPACES}"
+
+done <<< "$(grep -E "^environment_name|^stack_name|^stack_version" "${TFVAR_FILE}")"

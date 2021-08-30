@@ -1,17 +1,37 @@
 #!/bin/bash
 set -e
 
-if [ ! -e "${SOURCE_DIRECTORY?}" ]; then
+if [ ! -e "${SOURCE_DIRECTORY}" ]; then
   echo "Source Code Directory doesn't exists: ${SOURCE_DIRECTORY}"
   exit 1
 fi
 
-if [ ! -e "${PROVIDER_FILE?}" ]; then
-  echo "Provider file doesn't exists: ${PROVIDER_FILE?}"
+if [ ! -e "${PROVIDER_FILE}" ]; then
+  echo "Provider file doesn't exists: ${PROVIDER_FILE}"
   exit 1
 fi
 
-if [ ! -e "${BUILD_CONFIGURATION_FILE?}" ]; then
-  echo "File not found: ${BUILD_CONFIGURATION_FILE?}. Did you download build scripts into Stack Source Code directory?"
+if [ ! -e "${BUILD_CONFIGURATION_FILE}" ]; then
+  echo "File not found: ${BUILD_CONFIGURATION_FILE}"
+  exit 1
+fi
+
+if ! grep --quiet --extended-regexp "^TERRAFORM_VERSION" "${BUILD_CONFIGURATION_FILE}"; then
+  echo "A variable named 'TERRAFORM_VERSION' is expected on: ${BUILD_CONFIGURATION_FILE}"
+  exit 1
+fi
+
+if [ ! -e "${TERRAFORM_VARIABLES_FILE}" ]; then
+  echo "Terraform Variables File doesn't exists: ${TERRAFORM_VARIABLES_FILE}"
+  exit 1
+fi
+
+if ! grep --quiet --extended-regexp "^stack_name" "${TERRAFORM_VARIABLES_FILE}"; then
+  echo "A variable named 'stack_name' is expected on: ${TERRAFORM_VARIABLES_FILE}"
+  exit 1
+fi
+
+if ! grep --quiet --extended-regexp "^stack_version" "${TERRAFORM_VARIABLES_FILE}"; then
+  echo "A variable named 'stack_version' is expected on: ${TERRAFORM_VARIABLES_FILE}"
   exit 1
 fi

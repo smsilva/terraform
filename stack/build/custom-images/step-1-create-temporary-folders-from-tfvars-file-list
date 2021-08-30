@@ -21,9 +21,8 @@ while read -r TFVARS_FILE_NAME; do
   cp "${TFVARS_FILE_NAME?}" "${CUSTOM_IMAGE_DIRECTORY?}/terraform.tfvars"
 
   # Retrieve some variables from tfvars file and export each one as Environment Variables
-  generate-terraform-variables-conf-from "${TFVARS_FILE_NAME?}" && \
-    mv terraform-variables.conf "${CUSTOM_IMAGE_DIRECTORY?}/build.conf" && \
-    source "${CUSTOM_IMAGE_DIRECTORY?}/build.conf"
+  generate-environment-variables-from "${TFVARS_FILE_NAME?}" > "${CUSTOM_IMAGE_DIRECTORY?}/build.conf"
+  source "${CUSTOM_IMAGE_DIRECTORY?}/build.conf"
 
   # Evaluate Backend Configuration Template
   export BACKEND_KEY="${ENVIRONMENT_NAME?}"

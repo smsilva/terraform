@@ -17,37 +17,41 @@ export BUILD_CONFIGURATION_FILE="${SOURCE_DIRECTORY}/build.conf"
 source "${BUILD_CONFIGURATION_FILE?}"
 
 # Export Terraform Version to be used with Templates
-export TERRAFORM_VERSION=${TERRAFORM_VERSION?}
+export TERRAFORM_VERSION=${TERRAFORM_VERSION-latest}
 
 # Retrieve some variables from tfvars file and export each one as an Environment Variable
-generate-terraform-variables-conf-from "${TERRAFORM_VARIABLES_FILE?}" && \
-  source terraform-variables.conf
+generate-environment-variables-from "${TERRAFORM_VARIABLES_FILE?}" > terraform-variables.conf
+source terraform-variables.conf
 
 # Show Loaded Build Settings
 ./show-build-settings
 
-# Generate stack.conf file
-envsubst < templates/stack.conf > stack.conf
-
-# Generate Dockerfile
-envsubst < templates/Dockerfile > Dockerfile
-
-# Generate Azure Resource Manager Variables file
+# Generate Templates
+#  - azurerm.conf.....: Azure Resource Manager Variables file to Initialize Remote Storage Backend
+#  - backend.conf.....: Terraform Azure Backend Provider Parameters
+#  - Dockerfile.......: Dockerfile for Image Build
+#  - stack.conf.......: Stack Name, Stack Version and Terraform Version
 envsubst < templates/azurerm.conf > azurerm.conf
+envsubst < templates/backend.conf > backend.conf
+envsubst < templates/Dockerfile > Dockerfile
+envsubst < templates/stack.conf > stack.conf
 
 # Copy ssh_key to access Git Repository and download Modules if needed
 cp -R "${HOME?}/.ssh" . && echo ""
 
 # Build Docker Image
-docker build -t ${STACK_NAME?}:${STACK_VERSION?} . && echo ""
+docker build \
+  --rm \
+  --tag "${STACK_NAME?}:${STACK_VERSION?}" . && echo ""
 
-# Clear File System
+# Clear Temporary Files
 rm -rf .ssh
-rm -rf Dockerfile
 rm -rf azurerm.conf
+rm -rf backend.conf
+rm -rf Dockerfile
+rm -rf src/
 rm -rf stack.conf
 rm -rf terraform-variables.conf
-rm -rf src/
 
 # Clear Intermediate Docker Images
 docker system prune -f > /dev/null

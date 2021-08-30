@@ -1,7 +1,6 @@
 #!/bin/sh
 echo ""
 echo "Terraform Initialization using Remote Backend"
-echo ""
 
 # Change Backend to Azure Resource Manager
 sed -i '/backend.*local/ s/local/azurerm/' provider.tf
