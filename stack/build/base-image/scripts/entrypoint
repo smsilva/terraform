@@ -3,10 +3,8 @@ export TERRAFORM_COMMAND="$@"
 export TERRAFORM_PLAN_FILE="/opt/output/terraform.plan"
 export PATH=/opt/scripts/:${PATH}
 
-loadconfig stack.conf
-loadconfig backend.conf
-
-# Export Loaded Parameters as Environment Variables
+loadconfig stack.conf >> /opt/environment-variables.conf
+loadconfig backend.conf >> /opt/environment-variables.conf
 . /opt/environment-variables.conf
 
 create-auto-tfvars-file

@@ -8,7 +8,7 @@ if [ ! -e ${CONFIGURATION_FILE?} ]; then
 fi
 
 while read -r LINE; do
-  KEY_NAME=$(echo ${LINE} | awk -F "=" '{ print $1 }' | tr "[:lower:]" "[:upper:]")
-  KEY_VALUE=$(echo ${LINE} | awk -F "=" '{ print $2 }')
-  echo "export ${KEY_NAME}=${KEY_VALUE}" >> /opt/environment-variables.conf
+  KEY_NAME=$(echo ${LINE} | awk -F "=" '{ print $1 }' | tr "[:lower:]" "[:upper:]" | tr -d " ")
+  KEY_VALUE=$(echo ${LINE} | awk -F "=" '{ print $2 }' | tr -d " ")
+  echo "export ${KEY_NAME}=${KEY_VALUE}"
 done < "${CONFIGURATION_FILE?}"
