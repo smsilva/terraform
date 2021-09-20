@@ -18,10 +18,8 @@ source "${BUILD_CONFIGURATION_FILE?}"
 
 # Export Terraform Version to be used with Templates
 export TERRAFORM_VERSION=${TERRAFORM_VERSION-latest}
-
-# Retrieve some variables from tfvars file and export each one as an Environment Variable
-generate-environment-variables-from "${TERRAFORM_VARIABLES_FILE?}" > terraform-variables.conf
-source terraform-variables.conf
+export STACK_NAME
+export STACK_VERSION
 
 # Show Loaded Build Settings
 ./show-build-settings

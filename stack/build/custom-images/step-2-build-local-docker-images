@@ -10,7 +10,19 @@ fi
 while read -r DIRECTORY; do
   source "${DIRECTORY}/build.conf"
 
-  IMAGE_TAG="${STACK_NAME?}/${ENVIRONMENT_NAME?}:${STACK_VERSION?}-${IMAGE_BUILD_ID?}"
+  DIRECTORY_NAME=$(basename "${DIRECTORY}")
+
+  IMAGE_TAG="${STACK_NAME?}/${DIRECTORY_NAME?}:${STACK_VERSION?}-${IMAGE_BUILD_ID?}"
+
+  export STACK_NAME
+  export STACK_VERSION
+  export ENVIRONMENT_NAME="${DIRECTORY_NAME}"
+
+  echo "DIRECTORY.........: ${DIRECTORY}"
+  echo "IMAGE_TAG.........: ${IMAGE_TAG}"
+  echo "STACK_NAME........: ${STACK_NAME}"
+  echo "STACK_VERSION.....: ${STACK_VERSION}"
+  echo "ENVIRONMENT_NAME..: ${ENVIRONMENT_NAME}"
 
   docker build \
     --rm \
