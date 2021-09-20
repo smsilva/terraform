@@ -1,8 +1,8 @@
 #!/bin/bash
 export PATH=${PWD}/../scripts/:${PATH}
 
-VARIABLES_DIRECTORY="$1"
-TARGET_DIRECTORY="$2"
+VARIABLES_DIRECTORY="${1}"
+TARGET_DIRECTORY="${2}"
 
 sudo rm -rf "${TARGET_DIRECTORY?}"
 mkdir -p "${TARGET_DIRECTORY?}"

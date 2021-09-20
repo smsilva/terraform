@@ -3,7 +3,7 @@
 set -e
 
 VARIABLES_DIRECTORY="${1-./variables}"
-IMAGE_BUILD_ID="$2"
+IMAGE_BUILD_ID="${2}"
 TARGET_DIRECTORY=".images"
 
 ./step-1-create-temporary-folders-from-tfvars-file-list "${VARIABLES_DIRECTORY?}" "${TARGET_DIRECTORY?}"
